@@ -30,7 +30,7 @@
     },
     {
       "text": {
-        "text": "*Note*: This is still in beta, so please report any issues!",
+        "text": ">*Note*: This is still in beta, so please report any issues!",
         "type": "mrkdwn"
       },
       "type": "section"

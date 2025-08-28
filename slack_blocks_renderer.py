@@ -6,7 +6,7 @@ The renderer inherits from mistletoe's BaseRenderer and outputs a list of Block 
 that can be used with the Slack SDK.
 """
 
-from typing import List, Union, Any, Optional, Dict
+from typing import List, Any, Optional, Dict
 from mistletoe.base_renderer import BaseRenderer
 from slack_sdk.models.blocks import (
     Block, SectionBlock, HeaderBlock, DividerBlock, 
@@ -14,7 +14,7 @@ from slack_sdk.models.blocks import (
 )
 
 
-class TableBlock:
+class TableBlock(Block):
     """
     Custom Table Block implementation for Slack Block Kit.
     
@@ -32,6 +32,9 @@ class TableBlock:
             block_id: Optional unique identifier for the block (max 255 chars)
             column_settings: Optional list of column configuration objects
         """
+        # Initialize parent Block with correct parameters
+        super().__init__(type="table", block_id=block_id)
+        
         # Validate constraints
         if len(rows) > 100:
             raise ValueError("Table cannot have more than 100 rows")
@@ -43,9 +46,7 @@ class TableBlock:
         if block_id and len(block_id) > 255:
             raise ValueError("block_id cannot be longer than 255 characters")
         
-        self.type = "table"
         self.rows = rows
-        self.block_id = block_id
         self.column_settings = column_settings
     
     def to_dict(self) -> Dict[str, Any]:
@@ -81,10 +82,10 @@ class SlackBlocksRenderer(BaseRenderer):
             extras: Additional custom tokens to add to the parsing process
         """
         super().__init__(*extras)
-        self.blocks: List[Union[Block, TableBlock]] = []
+        self.blocks: List[Block] = []
         self.current_text_parts: List[str] = []
     
-    def render_document(self, token) -> List[Union[Block, TableBlock]]:
+    def render_document(self, token) -> List[Block]:
         """
         Render the entire document and return the list of blocks.
         
