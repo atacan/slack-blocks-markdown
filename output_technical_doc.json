@@ -1,0 +1,60 @@
+{
+  "blocks": [
+    {
+      "text": {
+        "text": "API Documentation",
+        "type": "plain_text"
+      },
+      "type": "header"
+    },
+    {
+      "text": {
+        "text": "Authentication",
+        "type": "plain_text"
+      },
+      "type": "header"
+    },
+    {
+      "text": {
+        "text": "All API requests must include an authentication header:",
+        "type": "mrkdwn"
+      },
+      "type": "section"
+    },
+    {
+      "text": {
+        "text": "```\ncurl -H \"Authorization: Bearer YOUR_TOKEN\" \\\n     https://api.example.com/v1/users\n\n```",
+        "type": "mrkdwn"
+      },
+      "type": "section"
+    },
+    {
+      "text": {
+        "text": "*Important*: Keep your API tokens secure and never commit them to version control.",
+        "type": "mrkdwn"
+      },
+      "type": "section"
+    },
+    {
+      "text": {
+        "text": "Rate Limits",
+        "type": "plain_text"
+      },
+      "type": "header"
+    },
+    {
+      "text": {
+        "text": "```\n*Endpoint | Limit | Window*\n---\n/users | 100 req/min | 60 seconds\n/data | 50 req/min | 60 seconds\n```",
+        "type": "mrkdwn"
+      },
+      "type": "section"
+    },
+    {
+      "text": {
+        "text": "*Note*: Rate limits are enforced per API key. Contact support if you need higher limits.",
+        "type": "mrkdwn"
+      },
+      "type": "section"
+    }
+  ]
+}

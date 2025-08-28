@@ -1,0 +1,119 @@
+{
+  "blocks": [
+    {
+      "text": {
+        "text": "Welcome to Slack Blocks!",
+        "type": "plain_text"
+      },
+      "type": "header"
+    },
+    {
+      "text": {
+        "text": "This is a *bold* statement with some _italic_ text and `inline code`.",
+        "type": "mrkdwn"
+      },
+      "type": "section"
+    },
+    {
+      "text": {
+        "text": "You can also have ~strikethrough~ text and <https://example.com|links to external sites>.",
+        "type": "mrkdwn"
+      },
+      "type": "section"
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "text": {
+        "text": "Code Blocks",
+        "type": "plain_text"
+      },
+      "type": "header"
+    },
+    {
+      "text": {
+        "text": "Here's a Python code example:",
+        "type": "mrkdwn"
+      },
+      "type": "section"
+    },
+    {
+      "text": {
+        "text": "```\ndef hello_world():\n    print(\"Hello, Slack!\")\n    return True\n\n```",
+        "type": "mrkdwn"
+      },
+      "type": "section"
+    },
+    {
+      "text": {
+        "text": "Lists",
+        "type": "plain_text"
+      },
+      "type": "header"
+    },
+    {
+      "text": {
+        "text": "Unordered List:",
+        "type": "plain_text"
+      },
+      "type": "header"
+    },
+    {
+      "text": {
+        "text": "• First item\n• Second item with *bold* text\n• Third item with a <https://slack.com|link>",
+        "type": "mrkdwn"
+      },
+      "type": "section"
+    },
+    {
+      "text": {
+        "text": "Ordered List:",
+        "type": "plain_text"
+      },
+      "type": "header"
+    },
+    {
+      "text": {
+        "text": "1. Step one\n2. Step two\n3. Step three",
+        "type": "mrkdwn"
+      },
+      "type": "section"
+    },
+    {
+      "text": {
+        "text": "Blockquotes",
+        "type": "plain_text"
+      },
+      "type": "header"
+    },
+    {
+      "text": {
+        "text": "This is an important quote that should stand out.",
+        "type": "mrkdwn"
+      },
+      "type": "section"
+    },
+    {
+      "text": {
+        "text": "It can span multiple lines and contain _formatting_.",
+        "type": "mrkdwn"
+      },
+      "type": "section"
+    },
+    {
+      "text": {
+        "text": "Tables",
+        "type": "plain_text"
+      },
+      "type": "header"
+    },
+    {
+      "text": {
+        "text": "```\n*Feature | Supported | Notes*\n---\nHeaders | ✅ | Limited to 150 chars\nParagraphs | ✅ | Uses SectionBlock\nCode blocks | ✅ | Preformatted text\nLists | ✅ | Bullet and numbered\n```",
+        "type": "mrkdwn"
+      },
+      "type": "section"
+    }
+  ]
+}
