@@ -43,11 +43,51 @@
       "type": "header"
     },
     {
-      "text": {
-        "text": "```\n*Endpoint | Limit | Window*\n---\n/users | 100 req/min | 60 seconds\n/data | 50 req/min | 60 seconds\n```",
-        "type": "mrkdwn"
-      },
-      "type": "section"
+      "type": "table",
+      "rows": [
+        [
+          {
+            "type": "raw_text",
+            "text": "Endpoint"
+          },
+          {
+            "type": "raw_text",
+            "text": "Limit"
+          },
+          {
+            "type": "raw_text",
+            "text": "Window"
+          }
+        ],
+        [
+          {
+            "type": "raw_text",
+            "text": "/users"
+          },
+          {
+            "type": "raw_text",
+            "text": "100 req/min"
+          },
+          {
+            "type": "raw_text",
+            "text": "60 seconds"
+          }
+        ],
+        [
+          {
+            "type": "raw_text",
+            "text": "/data"
+          },
+          {
+            "type": "raw_text",
+            "text": "50 req/min"
+          },
+          {
+            "type": "raw_text",
+            "text": "60 seconds"
+          }
+        ]
+      ]
     },
     {
       "text": {

@@ -102,11 +102,79 @@
       "type": "header"
     },
     {
-      "text": {
-        "text": "```\n*Feature | Supported | Notes*\n---\nHeaders | ✅ | Limited to 150 chars\nParagraphs | ✅ | Uses SectionBlock\nCode blocks | ✅ | Preformatted text\nLists | ✅ | Bullet and numbered\n```",
-        "type": "mrkdwn"
-      },
-      "type": "section"
+      "type": "table",
+      "rows": [
+        [
+          {
+            "type": "raw_text",
+            "text": "Feature"
+          },
+          {
+            "type": "raw_text",
+            "text": "Supported"
+          },
+          {
+            "type": "raw_text",
+            "text": "Notes"
+          }
+        ],
+        [
+          {
+            "type": "raw_text",
+            "text": "Headers"
+          },
+          {
+            "type": "raw_text",
+            "text": "✅"
+          },
+          {
+            "type": "raw_text",
+            "text": "Limited to 150 chars"
+          }
+        ],
+        [
+          {
+            "type": "raw_text",
+            "text": "Paragraphs"
+          },
+          {
+            "type": "raw_text",
+            "text": "✅"
+          },
+          {
+            "type": "raw_text",
+            "text": "Uses SectionBlock"
+          }
+        ],
+        [
+          {
+            "type": "raw_text",
+            "text": "Code blocks"
+          },
+          {
+            "type": "raw_text",
+            "text": "✅"
+          },
+          {
+            "type": "raw_text",
+            "text": "Preformatted text"
+          }
+        ],
+        [
+          {
+            "type": "raw_text",
+            "text": "Lists"
+          },
+          {
+            "type": "raw_text",
+            "text": "✅"
+          },
+          {
+            "type": "raw_text",
+            "text": "Bullet and numbered"
+          }
+        ]
+      ]
     }
   ]
 }

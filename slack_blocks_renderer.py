@@ -6,12 +6,64 @@ The renderer inherits from mistletoe's BaseRenderer and outputs a list of Block 
 that can be used with the Slack SDK.
 """
 
-from typing import List, Union, Any
+from typing import List, Union, Any, Optional, Dict
 from mistletoe.base_renderer import BaseRenderer
 from slack_sdk.models.blocks import (
     Block, SectionBlock, HeaderBlock, DividerBlock, 
     MarkdownTextObject, PlainTextObject
 )
+
+
+class TableBlock:
+    """
+    Custom Table Block implementation for Slack Block Kit.
+    
+    Since the Slack SDK doesn't include TableBlock, this implements it
+    according to the official Slack documentation.
+    """
+    
+    def __init__(self, rows: List[List[Dict[str, Any]]], block_id: Optional[str] = None, 
+                 column_settings: Optional[List[Dict[str, Any]]] = None):
+        """
+        Initialize a Table block.
+        
+        Args:
+            rows: List of rows, where each row is a list of cell objects
+            block_id: Optional unique identifier for the block (max 255 chars)
+            column_settings: Optional list of column configuration objects
+        """
+        # Validate constraints
+        if len(rows) > 100:
+            raise ValueError("Table cannot have more than 100 rows")
+        
+        for i, row in enumerate(rows):
+            if len(row) > 20:
+                raise ValueError(f"Row {i} cannot have more than 20 columns")
+        
+        if block_id and len(block_id) > 255:
+            raise ValueError("block_id cannot be longer than 255 characters")
+        
+        self.type = "table"
+        self.rows = rows
+        self.block_id = block_id
+        self.column_settings = column_settings
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        Convert the TableBlock to a dictionary for JSON serialization.
+        """
+        result = {
+            "type": self.type,
+            "rows": self.rows
+        }
+        
+        if self.block_id:
+            result["block_id"] = self.block_id
+            
+        if self.column_settings:
+            result["column_settings"] = self.column_settings
+            
+        return result
 
 
 class SlackBlocksRenderer(BaseRenderer):
@@ -29,10 +81,10 @@ class SlackBlocksRenderer(BaseRenderer):
             extras: Additional custom tokens to add to the parsing process
         """
         super().__init__(*extras)
-        self.blocks: List[Block] = []
+        self.blocks: List[Union[Block, TableBlock]] = []
         self.current_text_parts: List[str] = []
     
-    def render_document(self, token) -> List[Block]:
+    def render_document(self, token) -> List[Union[Block, TableBlock]]:
         """
         Render the entire document and return the list of blocks.
         
@@ -193,32 +245,47 @@ class SlackBlocksRenderer(BaseRenderer):
     
     def render_table(self, token) -> str:
         """
-        Render table as SectionBlock with formatted table.
+        Render table as TableBlock with proper cell structure.
         """
-        table_lines = []
+        rows = []
         
         # Render header if present
         if hasattr(token, 'header') and token.header:
-            header_content = self.render_table_row(token.header, is_header=True)
-            table_lines.append(header_content)
-            table_lines.append("---")  # Separator
+            header_row = self._render_table_row_as_cells(token.header)
+            rows.append(header_row)
         
         # Render body rows
         for row in token.children:
-            row_content = self.render_table_row(row)
-            table_lines.append(row_content)
+            body_row = self._render_table_row_as_cells(row)
+            rows.append(body_row)
         
-        if table_lines:
-            table_text = "\n".join(table_lines)
+        if rows:
+            # Ensure we don't exceed limits
+            if len(rows) > 100:
+                rows = rows[:100]
             
-            # Truncate if too long
-            if len(table_text) > 3000:
-                table_text = table_text[:2997] + "..."
-            
-            section_block = SectionBlock(
-                text=MarkdownTextObject(text=f"```\n{table_text}\n```"))
-            self.blocks.append(section_block)
+            table_block = TableBlock(rows=rows)
+            self.blocks.append(table_block)
         return ""
+    
+    def _render_table_row_as_cells(self, token) -> List[Dict[str, Any]]:
+        """
+        Render a table row as a list of cell objects for TableBlock.
+        
+        Returns:
+            List of cell objects with type and content
+        """
+        cells = []
+        for cell in token.children:
+            cell_content = self.render_table_cell(cell)
+            # Limit to 20 columns
+            if len(cells) >= 20:
+                break
+            cells.append({
+                "type": "raw_text",
+                "text": cell_content or " "
+            })
+        return cells
     
     def render_table_row(self, token, is_header=False) -> str:
         """
