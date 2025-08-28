@@ -102,10 +102,28 @@ class SlackBlocksRenderer(BaseRenderer):
         """
         Render blockquote as SectionBlock with quote formatting.
         """
-        quote_content = self.render_inner(token).strip()
-        if quote_content:
-            # Format as quote in Slack markdown
-            formatted_quote = f">{quote_content}"
+        # Collect content from all paragraphs within the quote
+        quote_parts = []
+        for child in token.children:
+            if hasattr(child, 'children'):
+                # This is typically a Paragraph, extract its content
+                content_parts = []
+                for subchild in child.children:
+                    content_parts.append(self.render(subchild))
+                paragraph_content = ''.join(content_parts).strip()
+                if paragraph_content:
+                    quote_parts.append(paragraph_content)
+        
+        if quote_parts:
+            # Format each part as a quote line with > prefix
+            # When there are multiple paragraphs, insert empty quote line between them
+            formatted_parts = []
+            for i, part in enumerate(quote_parts):
+                formatted_parts.append(f">{part}")
+                # Add empty quote line between paragraphs (except after the last one)
+                if i < len(quote_parts) - 1:
+                    formatted_parts.append(">")
+            formatted_quote = '\n'.join(formatted_parts)
             
             # Truncate if too long
             if len(formatted_quote) > 3000:

@@ -51,7 +51,7 @@
     },
     {
       "text": {
-        "text": "*Note*: Rate limits are enforced per API key. Contact support if you need higher limits.",
+        "text": ">*Note*: Rate limits are enforced per API key. Contact support if you need higher limits.",
         "type": "mrkdwn"
       },
       "type": "section"

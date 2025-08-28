@@ -89,14 +89,7 @@
     },
     {
       "text": {
-        "text": "This is an important quote that should stand out.",
-        "type": "mrkdwn"
-      },
-      "type": "section"
-    },
-    {
-      "text": {
-        "text": "It can span multiple lines and contain _formatting_.",
+        "text": ">This is an important quote that should stand out.\n>\n>It can span multiple lines and contain _formatting_.",
         "type": "mrkdwn"
       },
       "type": "section"
