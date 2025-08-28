@@ -1,3 +1,6 @@
+from slack_sdk.models.blocks import Block
+
+
 def main():
     print("Hello from slack-blocks-markdown!")
 
