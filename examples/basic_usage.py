@@ -86,7 +86,7 @@ if __name__ == "__main__":
         "simple_example": {"blocks": simple_blocks}
     }
     
-    with open("example_output.json", "w") as f:
+    with open("examples/example_output.json", "w") as f:
         json.dump(output, f, indent=2)
     
     print(f"\n💾 Saved to example_output.json")
