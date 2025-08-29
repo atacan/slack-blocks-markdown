@@ -1,39 +1,66 @@
 {
-  "blocks": [
-    {
-      "text": {
-        "text": "Welcome to our project!",
-        "type": "plain_text"
+  "advanced_example": {
+    "blocks": [
+      {
+        "text": {
+          "text": "Welcome to our project!",
+          "type": "plain_text"
+        },
+        "type": "header"
       },
-      "type": "header"
-    },
-    {
-      "text": {
-        "text": "This is a *bold* announcement about our new features:",
-        "type": "mrkdwn"
+      {
+        "text": {
+          "text": "This is a *bold* announcement about our new features:",
+          "type": "mrkdwn"
+        },
+        "type": "section"
       },
-      "type": "section"
-    },
-    {
-      "text": {
-        "text": "\u2022 \u2705 User authentication\n\u2022 \u2705 Real-time updates\n\u2022 \ud83d\udea7 Mobile app (coming soon)",
-        "type": "mrkdwn"
+      {
+        "text": {
+          "text": "\u2022 \u2705 User authentication\n\u2022 \u2705 Real-time updates\n\u2022 \ud83d\udea7 Mobile app (coming soon)",
+          "type": "mrkdwn"
+        },
+        "type": "section"
       },
-      "type": "section"
-    },
-    {
-      "text": {
-        "text": "Check out our <https://docs.example.com|documentation> for more details.",
-        "type": "mrkdwn"
+      {
+        "text": {
+          "text": "Check out our <https://docs.example.com|documentation> for more details.",
+          "type": "mrkdwn"
+        },
+        "type": "section"
       },
-      "type": "section"
-    },
-    {
-      "text": {
-        "text": ">*Note*: This is still in beta, so please report any issues!",
-        "type": "mrkdwn"
+      {
+        "text": {
+          "text": ">*Note*: This is still in beta, so please report any issues!",
+          "type": "mrkdwn"
+        },
+        "type": "section"
+      }
+    ]
+  },
+  "simple_example": {
+    "blocks": [
+      {
+        "text": {
+          "text": "Quick Demo",
+          "type": "plain_text"
+        },
+        "type": "header"
       },
-      "type": "section"
-    }
-  ]
+      {
+        "text": {
+          "text": "This is the *easiest way* to convert markdown to Slack blocks!",
+          "type": "mrkdwn"
+        },
+        "type": "section"
+      },
+      {
+        "text": {
+          "text": "\u2022 Just call `markdown_to_blocks()`\n\u2022 Get back a list of block dictionaries\n\u2022 Ready for the Slack API!",
+          "type": "mrkdwn"
+        },
+        "type": "section"
+      }
+    ]
+  }
 }
