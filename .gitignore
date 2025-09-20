@@ -5,6 +5,24 @@ build/
 dist/
 wheels/
 *.egg-info
+*.egg
 
 # Virtual environments
 .venv
+venv/
+env/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Testing and coverage
+.coverage
+.pytest_cache/
+.tox/
+.nox/
+
+# PyPI and packaging
+.pypirc

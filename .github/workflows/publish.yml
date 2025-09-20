@@ -1,0 +1,101 @@
+name: Publish to PyPI
+
+on:
+  # Trigger on manual dispatch (for testing)
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to publish to'
+        required: true
+        default: 'testpypi'
+        type: choice
+        options:
+          - testpypi
+          - pypi
+  
+  # Trigger on new tags (for releases)
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install build dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build twine
+    
+    - name: Build package
+      run: |
+        python -m build
+        
+    - name: Check distribution
+      run: |
+        python -m twine check dist/*
+    
+    - name: Determine target repository
+      id: target
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          # Manual dispatch - use input
+          echo "repository=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+          if [[ "${{ github.event.inputs.environment }}" == "testpypi" ]]; then
+            echo "repository_url=https://test.pypi.org/legacy/" >> $GITHUB_OUTPUT
+          else
+            echo "repository_url=https://upload.pypi.org/legacy/" >> $GITHUB_OUTPUT
+          fi
+        else
+          # Tag push - always use PyPI for releases
+          echo "repository=pypi" >> $GITHUB_OUTPUT
+          echo "repository_url=https://upload.pypi.org/legacy/" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Publish to TestPyPI
+      if: steps.target.outputs.repository == 'testpypi'
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        user: __token__
+        password: ${{ secrets.TESTPYPI_API_TOKEN }}
+        repository-url: ${{ steps.target.outputs.repository_url }}
+        print-hash: true
+    
+    - name: Publish to PyPI
+      if: steps.target.outputs.repository == 'pypi'
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_API_TOKEN }}
+        repository-url: ${{ steps.target.outputs.repository_url }}
+        print-hash: true
+    
+    - name: Create GitHub Release
+      if: github.event_name == 'push' && steps.target.outputs.repository == 'pypi'
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref_name }}
+        release_name: Release ${{ github.ref_name }}
+        body: |
+          ## Changes
+          
+          See [CHANGELOG.md](https://github.com/atacan/slack-blocks-markdown/blob/main/CHANGELOG.md) for details.
+          
+          ## Installation
+          
+          ```bash
+          pip install slack-blocks-markdown==${{ github.ref_name }}
+          ```
+        draft: false
+        prerelease: false
