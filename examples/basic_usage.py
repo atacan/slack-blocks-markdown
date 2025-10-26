@@ -15,11 +15,9 @@ def advanced_usage_example():
 
 This is a **bold** announcement about our new features:
 
-- ✅ User authentication 
+- ✅ User authentication
 - ✅ Real-time updates
 - 🚧 Mobile app (coming soon)
-
-Check out our [documentation](https://docs.example.com) for more details.
 
 > **Note**: This is still in beta, so please report any issues!
 """

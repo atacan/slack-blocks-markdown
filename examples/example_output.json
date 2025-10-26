@@ -24,13 +24,6 @@
       },
       {
         "text": {
-          "text": "Check out our <https://docs.example.com|documentation> for more details.",
-          "type": "mrkdwn"
-        },
-        "type": "section"
-      },
-      {
-        "text": {
           "text": ">*Note*: This is still in beta, so please report any issues!",
           "type": "mrkdwn"
         },
