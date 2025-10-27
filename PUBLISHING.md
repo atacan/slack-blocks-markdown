@@ -251,7 +251,7 @@ pip install slack-blocks-markdown
 
 1. **Never commit API tokens** to version control
 2. **Use scoped tokens** when possible
-3. **Regularly rotate tokens** 
+3. **Regularly rotate tokens**
 4. **Use GitHub secrets** for CI/CD
 5. **Test on TestPyPI first** before production
 

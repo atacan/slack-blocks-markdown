@@ -35,8 +35,8 @@ markdown = """# Project Update
 
 This is a **bold** announcement about our new features:
 
-- ✅ User authentication 
-- ✅ Real-time updates  
+- ✅ User authentication
+- ✅ Real-time updates
 - 🚧 Mobile app (coming soon)
 
 > **Note**: This is still in beta, so please report any issues!
@@ -65,7 +65,7 @@ from slack_blocks_markdown import SlackBlocksRenderer
 with SlackBlocksRenderer() as renderer:
     document = Document(markdown)
     blocks = renderer.render(document)
-    
+
 # Convert to dictionaries for JSON serialization
 blocks_json = [block.to_dict() for block in blocks]
 ```
@@ -122,7 +122,7 @@ blocks = markdown_to_blocks(markdown)
 markdown = """
 | Feature | Status |
 |---------|--------|
-| Auth | ✅ Done |  
+| Auth | ✅ Done |
 | API | 🚧 Progress |
 """
 blocks = markdown_to_blocks(markdown)
@@ -193,7 +193,7 @@ mypy src/
 The library includes comprehensive tests covering:
 
 - All markdown element types
-- Slack constraint validation  
+- Slack constraint validation
 - Edge cases and error handling
 - Integration with Slack API format
 - Performance with large documents

@@ -43,13 +43,16 @@ class TestBasicRendering:
 class TestInlineFormatting:
     """Test inline markdown formatting"""
 
-    @pytest.mark.parametrize(("markdown", "expected"), [
-        ("**bold**", "*bold*"),
-        ("_italic_", "_italic_"),
-        ("`code`", "`code`"),
-        ("~strikethrough~", "~strikethrough~"),
-        ("[link](https://example.com)", "<https://example.com|link>"),
-    ])
+    @pytest.mark.parametrize(
+        ("markdown", "expected"),
+        [
+            ("**bold**", "*bold*"),
+            ("_italic_", "_italic_"),
+            ("`code`", "`code`"),
+            ("~strikethrough~", "~strikethrough~"),
+            ("[link](https://example.com)", "<https://example.com|link>"),
+        ],
+    )
     def test_inline_formatting(self, renderer, markdown, expected):
         """Test various inline formatting conversions"""
         document = Document(markdown)
@@ -185,7 +188,9 @@ class TestEdgeCases:
 
     def test_whitespace_only(self, renderer):
         """Test handling of whitespace-only content"""
-        markdown = "   \n\n   \n"  # Just spaces, no tabs (which would create code block)
+        markdown = (
+            "   \n\n   \n"  # Just spaces, no tabs (which would create code block)
+        )
         document = Document(markdown)
         blocks = renderer.render(document)
 

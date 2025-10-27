@@ -15,8 +15,12 @@ class TableBlock(Block):
     according to the official Slack documentation.
     """
 
-    def __init__(self, rows: list[list[dict[str, Any]]], block_id: str | None = None,
-                 column_settings: list[dict[str, Any]] | None = None):
+    def __init__(
+        self,
+        rows: list[list[dict[str, Any]]],
+        block_id: str | None = None,
+        column_settings: list[dict[str, Any]] | None = None,
+    ):
         """
         Initialize a Table block.
 

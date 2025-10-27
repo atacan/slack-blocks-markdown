@@ -139,7 +139,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12", 
+    "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Topic :: Communications :: Chat",
     "Topic :: Text Processing :: Markup",
@@ -151,7 +151,7 @@ dependencies = ["mistletoe>=1.4.0", "slack-sdk>=3.36.0"]
 [project.optional-dependencies]
 dev = [
     "pytest>=7.4.0",
-    "pytest-cov>=4.1.0", 
+    "pytest-cov>=4.1.0",
     "black>=23.0.0",
     "ruff>=0.1.0",
     "mypy>=1.5.0",

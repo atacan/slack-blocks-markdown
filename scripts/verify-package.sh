@@ -28,7 +28,7 @@ echo "--- Wheel contents ---"
 python -m zipfile -l dist/*.whl 2>/dev/null || echo "No wheel file found"
 
 echo ""
-echo "--- Tarball contents ---" 
+echo "--- Tarball contents ---"
 tar -tzf dist/*.tar.gz 2>/dev/null || echo "No tarball file found"
 
 echo ""
@@ -52,7 +52,7 @@ python -c "
 import slack_blocks_markdown
 print('✅ slack_blocks_markdown import successful')
 
-from slack_blocks_markdown import markdown_to_blocks, SlackBlocksRenderer  
+from slack_blocks_markdown import markdown_to_blocks, SlackBlocksRenderer
 print('✅ Main imports successful')
 
 # Test basic functionality
@@ -78,7 +78,7 @@ echo "🎉 Package verification complete!"
 echo ""
 echo "📋 Summary:"
 echo "  ✅ Package builds successfully"
-echo "  ✅ Package structure is correct"  
+echo "  ✅ Package structure is correct"
 echo "  ✅ Package installs without errors"
 echo "  ✅ Basic functionality works"
 echo "  ✅ All dependencies are available"

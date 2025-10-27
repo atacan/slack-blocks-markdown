@@ -113,7 +113,9 @@ For more info, see our [docs](https://docs.example.com).
         # Generate large but reasonable markdown
         large_markdown = "# Large Document\n\n"
         for i in range(100):
-            large_markdown += f"## Section {i}\n\nThis is paragraph {i} with **bold** text.\n\n"
+            large_markdown += (
+                f"## Section {i}\n\nThis is paragraph {i} with **bold** text.\n\n"
+            )
             large_markdown += f"- Item {i}a\n- Item {i}b\n\n"
 
         start_time = time.time()

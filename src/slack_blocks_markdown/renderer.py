@@ -188,7 +188,7 @@ class SlackBlocksRenderer(BaseRenderer):
                 content_parts.append(self.render(child))
         return "".join(content_parts)
 
-    def render_thematic_break(self, token) -> str:  # noqa: ARG002
+    def render_thematic_break(self, token) -> str:
         """
         Render horizontal rule as DividerBlock.
         """
@@ -234,10 +234,12 @@ class SlackBlocksRenderer(BaseRenderer):
             # Limit to 20 columns
             if len(cells) >= 20:
                 break
-            cells.append({
-                "type": "raw_text",
-                "text": cell_content or " ",
-            })
+            cells.append(
+                {
+                    "type": "raw_text",
+                    "text": cell_content or " ",
+                },
+            )
         return cells
 
     def render_table_row(self, token, is_header=False) -> str:

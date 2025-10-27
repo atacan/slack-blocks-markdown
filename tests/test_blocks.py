@@ -26,7 +26,10 @@ class TestTableBlock:
     def test_table_block_to_dict(self):
         """Test TableBlock serialization"""
         rows = [
-            [{"type": "raw_text", "text": "Name"}, {"type": "raw_text", "text": "Value"}],
+            [
+                {"type": "raw_text", "text": "Name"},
+                {"type": "raw_text", "text": "Value"},
+            ],
             [{"type": "raw_text", "text": "Test"}, {"type": "raw_text", "text": "123"}],
         ]
 
@@ -61,7 +64,10 @@ class TestTableBlock:
     def test_table_block_with_column_settings(self):
         """Test TableBlock with column settings"""
         rows = [
-            [{"type": "raw_text", "text": "Name"}, {"type": "raw_text", "text": "Value"}],
+            [
+                {"type": "raw_text", "text": "Name"},
+                {"type": "raw_text", "text": "Value"},
+            ],
             [{"type": "raw_text", "text": "Test"}, {"type": "raw_text", "text": "123"}],
         ]
         column_settings = [

@@ -88,7 +88,7 @@ This module provides a custom renderer that converts Markdown to Slack Block Kit
 from typing import List, Any
 from mistletoe.base_renderer import BaseRenderer
 from slack_sdk.models.blocks import (
-    Block, SectionBlock, HeaderBlock, DividerBlock, 
+    Block, SectionBlock, HeaderBlock, DividerBlock,
     MarkdownTextObject, PlainTextObject
 )
 from .blocks import TableBlock
@@ -200,7 +200,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12", 
+    "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Topic :: Communications :: Chat",
     "Topic :: Text Processing :: Markup",
@@ -216,7 +216,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest>=7.4.0",
-    "pytest-cov>=4.1.0", 
+    "pytest-cov>=4.1.0",
     "black>=23.0.0",
     "ruff>=0.1.0",
     "mypy>=1.5.0",
@@ -369,7 +369,7 @@ markdown = """
 This is a **bold** announcement!
 
 - Feature A completed
-- Feature B in progress  
+- Feature B in progress
 
 Check out our [documentation](https://example.com) for details.
 """
@@ -388,7 +388,7 @@ from slack_blocks_markdown import SlackBlocksRenderer
 with SlackBlocksRenderer() as renderer:
     document = Document(markdown_text)
     blocks = renderer.render(document)
-    
+
 # Convert to JSON for Slack API
 blocks_json = [block.to_dict() for block in blocks]
 ```
@@ -484,7 +484,7 @@ def expected_blocks():
             "text": {"type": "plain_text", "text": "Hello"}
         },
         "section": {
-            "type": "section", 
+            "type": "section",
             "text": {"type": "mrkdwn", "text": "This is *bold* text."}
         }
     }
@@ -507,40 +507,40 @@ from slack_sdk.models.blocks import HeaderBlock, SectionBlock, DividerBlock
 
 class TestBasicRendering:
     """Test basic markdown element rendering"""
-    
+
     def test_heading_renders_to_header_block(self, renderer):
         """Test that headings become HeaderBlocks"""
         markdown = "# Test Heading"
         document = Document(markdown)
         blocks = renderer.render(document)
-        
+
         assert len(blocks) == 1
         assert isinstance(blocks[0], HeaderBlock)
         assert blocks[0].text.text == "Test Heading"
-    
+
     def test_paragraph_renders_to_section_block(self, renderer):
         """Test that paragraphs become SectionBlocks"""
         markdown = "This is a paragraph with **bold** text."
         document = Document(markdown)
         blocks = renderer.render(document)
-        
+
         assert len(blocks) == 1
         assert isinstance(blocks[0], SectionBlock)
         assert blocks[0].text.text == "This is a paragraph with *bold* text."
-    
+
     def test_horizontal_rule_renders_to_divider(self, renderer):
         """Test that horizontal rules become DividerBlocks"""
         markdown = "---"
         document = Document(markdown)
         blocks = renderer.render(document)
-        
+
         assert len(blocks) == 1
         assert isinstance(blocks[0], DividerBlock)
 
 
 class TestInlineFormatting:
     """Test inline markdown formatting"""
-    
+
     @pytest.mark.parametrize("markdown,expected", [
         ("**bold**", "*bold*"),
         ("_italic_", "_italic_"),
@@ -552,32 +552,32 @@ class TestInlineFormatting:
         """Test various inline formatting conversions"""
         document = Document(markdown)
         blocks = renderer.render(document)
-        
+
         assert len(blocks) == 1
         assert blocks[0].text.text == expected
 
 
 class TestLists:
     """Test list rendering functionality"""
-    
+
     def test_unordered_list_rendering(self, renderer):
         """Test unordered list conversion"""
         markdown = "- Item 1\n- Item 2\n- Item 3"
         document = Document(markdown)
         blocks = renderer.render(document)
-        
+
         assert len(blocks) == 1
         assert isinstance(blocks[0], SectionBlock)
         assert "• Item 1" in blocks[0].text.text
         assert "• Item 2" in blocks[0].text.text
         assert "• Item 3" in blocks[0].text.text
-    
+
     def test_ordered_list_rendering(self, renderer):
         """Test ordered list conversion"""
         markdown = "1. First\n2. Second\n3. Third"
         document = Document(markdown)
         blocks = renderer.render(document)
-        
+
         assert len(blocks) == 1
         assert isinstance(blocks[0], SectionBlock)
         assert "1. First" in blocks[0].text.text
@@ -587,13 +587,13 @@ class TestLists:
 
 class TestCodeBlocks:
     """Test code block handling"""
-    
+
     def test_code_block_rendering(self, renderer):
         """Test code block formatting"""
         markdown = "```python\ndef hello():\n    return 'world'\n```"
         document = Document(markdown)
         blocks = renderer.render(document)
-        
+
         assert len(blocks) == 1
         assert isinstance(blocks[0], SectionBlock)
         assert blocks[0].text.text.startswith("```")
@@ -603,23 +603,23 @@ class TestCodeBlocks:
 
 class TestBlockquotes:
     """Test blockquote rendering"""
-    
+
     def test_simple_blockquote(self, renderer):
         """Test basic blockquote formatting"""
         markdown = "> This is a quote"
         document = Document(markdown)
         blocks = renderer.render(document)
-        
+
         assert len(blocks) == 1
         assert isinstance(blocks[0], SectionBlock)
         assert blocks[0].text.text.startswith(">This is a quote")
-    
+
     def test_multiline_blockquote(self, renderer):
         """Test multiline blockquote handling"""
         markdown = "> First line\n>\n> Second paragraph"
         document = Document(markdown)
         blocks = renderer.render(document)
-        
+
         assert len(blocks) == 1
         text = blocks[0].text.text
         assert ">First line" in text
@@ -628,17 +628,17 @@ class TestBlockquotes:
 
 class TestTables:
     """Test table rendering functionality"""
-    
+
     def test_simple_table_rendering(self, renderer):
         """Test basic table conversion to TableBlock"""
         markdown = """| Name | Value |
 |------|--------|
 | Test | 123 |
 | Demo | 456 |"""
-        
+
         document = Document(markdown)
         blocks = renderer.render(document)
-        
+
         assert len(blocks) == 1
         # Should be our custom TableBlock
         assert blocks[0].type == "table"
@@ -647,24 +647,24 @@ class TestTables:
 
 class TestConstraints:
     """Test Slack Block Kit constraint handling"""
-    
+
     def test_long_heading_truncation(self, renderer):
         """Test that long headings are truncated to 150 chars"""
         long_title = "A" * 200
         markdown = f"# {long_title}"
         document = Document(markdown)
         blocks = renderer.render(document)
-        
+
         assert len(blocks) == 1
         assert len(blocks[0].text.text) <= 150
         assert blocks[0].text.text.endswith("...")
-    
+
     def test_long_paragraph_truncation(self, renderer):
         """Test that long paragraphs are truncated to 3000 chars"""
         long_text = "This is a very long paragraph. " * 200
         document = Document(long_text)
         blocks = renderer.render(document)
-        
+
         assert len(blocks) == 1
         assert len(blocks[0].text.text) <= 3000
         assert blocks[0].text.text.endswith("...")
@@ -672,23 +672,23 @@ class TestConstraints:
 
 class TestEdgeCases:
     """Test edge cases and error conditions"""
-    
+
     def test_empty_document(self, renderer):
         """Test handling of empty markdown"""
         markdown = ""
         document = Document(markdown)
         blocks = renderer.render(document)
-        
+
         assert blocks == []
-    
+
     def test_whitespace_only(self, renderer):
         """Test handling of whitespace-only content"""
         markdown = "   \n\n\t  \n"
         document = Document(markdown)
         blocks = renderer.render(document)
-        
+
         assert blocks == []
-    
+
     def test_mixed_complex_content(self, renderer):
         """Test complex mixed content document"""
         markdown = """# Main Title
@@ -715,13 +715,13 @@ console.log('hello world');
 
 Final paragraph after divider.
 """
-        
+
         document = Document(markdown)
         blocks = renderer.render(document)
-        
+
         # Should generate multiple blocks of different types
         assert len(blocks) > 5
-        
+
         # Check we have different block types
         block_types = [block.type for block in blocks]
         assert "header" in block_types
@@ -745,52 +745,52 @@ from slack_blocks_markdown.blocks import TableBlock
 
 class TestTableBlock:
     """Test custom TableBlock functionality"""
-    
+
     def test_table_block_creation(self):
         """Test basic TableBlock creation"""
         rows = [
             [{"type": "raw_text", "text": "Header 1"}],
             [{"type": "raw_text", "text": "Cell 1"}]
         ]
-        
+
         table = TableBlock(rows=rows)
-        
+
         assert table.type == "table"
         assert len(table.rows) == 2
         assert table.rows[0][0]["text"] == "Header 1"
-    
+
     def test_table_block_to_dict(self):
         """Test TableBlock serialization"""
         rows = [
             [{"type": "raw_text", "text": "Name"}, {"type": "raw_text", "text": "Value"}],
             [{"type": "raw_text", "text": "Test"}, {"type": "raw_text", "text": "123"}]
         ]
-        
+
         table = TableBlock(rows=rows, block_id="test_table")
         table_dict = table.to_dict()
-        
+
         assert table_dict["type"] == "table"
         assert table_dict["block_id"] == "test_table"
         assert len(table_dict["rows"]) == 2
         assert table_dict["rows"][0][0]["text"] == "Name"
-    
+
     def test_table_constraints(self):
         """Test TableBlock constraint validation"""
         # Test row limit
         too_many_rows = [[{"type": "raw_text", "text": f"Row {i}"}] for i in range(101)]
-        
+
         with pytest.raises(ValueError, match="cannot have more than 100 rows"):
             TableBlock(rows=too_many_rows)
-        
-        # Test column limit  
+
+        # Test column limit
         too_many_cols = [{"type": "raw_text", "text": f"Col {i}"} for i in range(21)]
-        
+
         with pytest.raises(ValueError, match="cannot have more than 20 columns"):
             TableBlock(rows=[too_many_cols])
-        
+
         # Test block_id length limit
         long_id = "x" * 256
-        
+
         with pytest.raises(ValueError, match="cannot be longer than 255 characters"):
             TableBlock(rows=[[{"type": "raw_text", "text": "test"}]], block_id=long_id)
 ```
@@ -812,7 +812,7 @@ from mistletoe import Document
 
 class TestIntegrationScenarios:
     """Test complete conversion scenarios"""
-    
+
     def test_readme_example(self):
         """Test the example from README works correctly"""
         markdown = """# Project Update
@@ -820,17 +820,17 @@ class TestIntegrationScenarios:
 This is a **bold** announcement!
 
 - Feature A completed
-- Feature B in progress  
+- Feature B in progress
 
 Check out our [documentation](https://example.com) for details."""
-        
+
         blocks = markdown_to_blocks(markdown)
-        
+
         assert len(blocks) >= 3  # Header, paragraph, list
         assert blocks[0]["type"] == "header"
         assert blocks[0]["text"]["text"] == "Project Update"
         assert "*bold*" in blocks[1]["text"]["text"]
-    
+
     def test_complex_document_conversion(self):
         """Test conversion of complex technical document"""
         markdown = """# API Documentation
@@ -857,42 +857,42 @@ For more info, see our [docs](https://docs.example.com).
 ---
 
 © 2025 Example Corp"""
-        
+
         blocks = markdown_to_blocks(markdown)
-        
+
         # Should have multiple different block types
         block_types = [block["type"] for block in blocks]
         assert "header" in block_types
         assert "section" in block_types
         assert "table" in block_types
         assert "divider" in block_types
-        
+
         # Verify JSON serialization works
         json_str = json.dumps({"blocks": blocks}, indent=2)
         assert len(json_str) > 100
-        
+
         # Should be valid JSON
         parsed = json.loads(json_str)
         assert "blocks" in parsed
-    
+
     def test_slack_api_compatibility(self):
         """Test that output is compatible with Slack API format"""
         markdown = "# Test\n\nThis is a test message with **formatting**."
-        
+
         blocks = markdown_to_blocks(markdown)
-        
+
         # Each block should have required fields for Slack API
         for block in blocks:
             assert "type" in block
-            
+
             if block["type"] == "header":
                 assert "text" in block
                 assert block["text"]["type"] == "plain_text"
-                
+
             elif block["type"] == "section":
                 assert "text" in block
                 assert block["text"]["type"] == "mrkdwn"
-    
+
     def test_error_handling_gracefully(self):
         """Test that malformed input doesn't crash"""
         test_cases = [
@@ -901,26 +901,26 @@ For more info, see our [docs](https://docs.example.com).
             "# \n\n",  # Empty header
             "[]() invalid link",  # Malformed link
         ]
-        
+
         for markdown in test_cases:
             # Should not raise exceptions
             blocks = markdown_to_blocks(markdown)
             assert isinstance(blocks, list)
-    
+
     def test_performance_with_large_documents(self):
         """Test performance with reasonably large documents"""
         import time
-        
+
         # Generate large but reasonable markdown
         large_markdown = "# Large Document\n\n"
         for i in range(100):
             large_markdown += f"## Section {i}\n\nThis is paragraph {i} with **bold** text.\n\n"
             large_markdown += f"- Item {i}a\n- Item {i}b\n\n"
-        
+
         start_time = time.time()
         blocks = markdown_to_blocks(large_markdown)
         end_time = time.time()
-        
+
         # Should complete reasonably quickly (under 5 seconds)
         assert (end_time - start_time) < 5.0
         assert len(blocks) > 200  # Should generate many blocks
@@ -1055,9 +1055,9 @@ def run_command(cmd, description):
     """Run a command and report results"""
     print(f"\n🔍 {description}")
     print(f"Running: {cmd}")
-    
+
     result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-    
+
     if result.returncode == 0:
         print(f"✅ {description} - PASSED")
         if result.stdout:
@@ -1069,7 +1069,7 @@ def run_command(cmd, description):
         if result.stdout:
             print(result.stdout)
         return False
-    
+
     return True
 
 
@@ -1085,16 +1085,16 @@ def main():
         ("python -m build", "Package Building"),
         ("python -m twine check dist/*", "Package Validation"),
     ]
-    
+
     print("🚀 Starting package verification...")
     print("=" * 50)
-    
+
     failed_checks = []
-    
+
     for cmd, description in checks:
         if not run_command(cmd, description):
             failed_checks.append(description)
-    
+
     print("\n" + "=" * 50)
     if failed_checks:
         print(f"❌ {len(failed_checks)} checks failed:")
@@ -1206,7 +1206,7 @@ rm edge_case_*.json
 - [ ] Package builds successfully: `python -m build`
 - [ ] All tests pass with coverage >80%: `pytest --cov=slack_blocks_markdown`
 - [ ] Linting passes: `ruff check src/`
-- [ ] Type checking passes: `mypy src/`  
+- [ ] Type checking passes: `mypy src/`
 - [ ] Code formatting is correct: `black --check src/ tests/`
 - [ ] Package validation passes: `twine check dist/*`
 - [ ] Package installs from wheel: `pip install dist/*.whl`

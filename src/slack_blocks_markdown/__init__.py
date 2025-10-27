@@ -10,10 +10,12 @@ from .renderer import SlackBlocksRenderer
 def markdown_to_blocks(markdown_text: str) -> list:
     """Convert markdown text to Slack blocks"""
     from mistletoe import Document
+
     with SlackBlocksRenderer() as renderer:
         document = Document(markdown_text)
         blocks = renderer.render(document)
     return [block.to_dict() for block in blocks]
+
 
 __all__ = ["SlackBlocksRenderer", "TableBlock", "markdown_to_blocks"]
 __version__ = "0.1.0"
