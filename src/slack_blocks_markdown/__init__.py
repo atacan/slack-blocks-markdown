@@ -18,4 +18,4 @@ def markdown_to_blocks(markdown_text: str) -> list:
 
 
 __all__ = ["SlackBlocksRenderer", "TableBlock", "markdown_to_blocks"]
-__version__ = "0.1.2"
+__version__ = "0.1.3"
