@@ -4,11 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "slack-blocks-markdown"
-version = "0.1.0"
+version = "0.1.1"
 description = "Convert Markdown to Slack Block Kit blocks using mistletoe"
 readme = "README.md"
-license = "MIT"
-license-files = ["LICENSE"]
+license = {file = "LICENSE"}
 authors = [
     {name = "atacan", email = "info@actondon.com"}
 ]

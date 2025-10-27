@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.0] - 2025-08-29
+## [0.1.1] - 2024-10-26
+
+### Fixed
+- Corrected CHANGELOG date for initial release
+- Updated package metadata
+
+## [0.1.0] - 2024-10-26
 
 ### Added
 - Initial release of slack-blocks-markdown library
@@ -28,5 +34,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inline formatting (bold, italic, code, links) in Slack markdown format
 - Automatic content truncation for Slack limits (150 chars for headers, 3000 for text)
 
-[Unreleased]: https://github.com/atacan/slack-blocks-markdown/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/atacan/slack-blocks-markdown/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/atacan/slack-blocks-markdown/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/atacan/slack-blocks-markdown/releases/tag/v0.1.0
