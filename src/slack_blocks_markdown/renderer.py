@@ -89,7 +89,8 @@ class SlackBlocksRenderer(BaseRenderer):
         """
         Render code block as SectionBlock with preformatted text.
         """
-        code_content = token.children[0].content if token.children else ""
+        children_list = list(token.children) if token.children else []
+        code_content = children_list[0].content if children_list else ""
 
         # Format as code block in Slack markdown
         formatted_code = f"```\n{code_content}\n```"
@@ -110,15 +111,16 @@ class SlackBlocksRenderer(BaseRenderer):
         """
         # Collect content from all paragraphs within the quote
         quote_parts = []
-        for child in token.children:
-            if hasattr(child, "children"):
-                # This is typically a Paragraph, extract its content
-                content_parts = []
-                for subchild in child.children:
-                    content_parts.append(cast(str, self.render(subchild)))
-                paragraph_content = "".join(content_parts).strip()
-                if paragraph_content:
-                    quote_parts.append(paragraph_content)
+        if token.children:
+            for child in token.children:
+                if hasattr(child, "children") and child.children:
+                    # This is typically a Paragraph, extract its content
+                    content_parts = []
+                    for subchild in child.children:
+                        content_parts.append(cast(str, self.render(subchild)))
+                    paragraph_content = "".join(content_parts).strip()
+                    if paragraph_content:
+                        quote_parts.append(paragraph_content)
 
         if quote_parts:
             # Format each part as a quote line with > prefix
@@ -148,15 +150,19 @@ class SlackBlocksRenderer(BaseRenderer):
         list_items = []
 
         # Collect all list items
-        for i, child in enumerate(token.children):
-            item_content = self.render_list_item(child).strip()
-            if item_content:
-                if hasattr(token, "start") and token.start is not None:
-                    # Ordered list
-                    list_items.append(f"{i + token.start}. {item_content}")
-                else:
-                    # Unordered list
-                    list_items.append(f"• {item_content}")
+        if token.children:
+            for i, child in enumerate(token.children):
+                item_content = self.render_list_item(
+                    cast(block_token.ListItem, child),
+                ).strip()
+                if item_content:
+                    # Check if this is an ordered list with a start attribute
+                    if hasattr(token, "start") and token.start is not None:
+                        # Ordered list
+                        list_items.append(f"{i + token.start}. {item_content}")
+                    else:
+                        # Unordered list
+                        list_items.append(f"• {item_content}")
 
         # Create a single block with all list items
         if list_items:
@@ -180,13 +186,14 @@ class SlackBlocksRenderer(BaseRenderer):
         """
         # List items usually contain a paragraph, get its text content
         content_parts = []
-        for child in token.children:
-            if hasattr(child, "children"):
-                # This is typically a Paragraph, extract its text
-                for subchild in child.children:
-                    content_parts.append(cast(str, self.render(subchild)))
-            else:
-                content_parts.append(cast(str, self.render(child)))
+        if token.children:
+            for child in token.children:
+                if hasattr(child, "children") and child.children:
+                    # This is typically a Paragraph, extract its text
+                    for subchild in child.children:
+                        content_parts.append(cast(str, self.render(subchild)))
+                else:
+                    content_parts.append(cast(str, self.render(child)))
         return "".join(content_parts)
 
     def render_thematic_break(self, token: block_token.ThematicBreak) -> str:
@@ -205,13 +212,18 @@ class SlackBlocksRenderer(BaseRenderer):
 
         # Render header if present
         if hasattr(token, "header") and token.header:
-            header_row = self._render_table_row_as_cells(token.header)
+            header_row = self._render_table_row_as_cells(
+                cast(block_token.TableRow, token.header),
+            )
             rows.append(header_row)
 
         # Render body rows
-        for row in token.children:
-            body_row = self._render_table_row_as_cells(row)
-            rows.append(body_row)
+        if token.children:
+            for row in token.children:
+                body_row = self._render_table_row_as_cells(
+                    cast(block_token.TableRow, row),
+                )
+                rows.append(body_row)
 
         if rows:
             # Ensure we don't exceed limits
@@ -233,17 +245,18 @@ class SlackBlocksRenderer(BaseRenderer):
             List of cell objects with type and content
         """
         cells: list[dict[str, Any]] = []
-        for cell in token.children:
-            cell_content = self.render_table_cell(cell)
-            # Limit to 20 columns
-            if len(cells) >= 20:
-                break
-            cells.append(
-                {
-                    "type": "raw_text",
-                    "text": cell_content or " ",
-                },
-            )
+        if token.children:
+            for cell in token.children:
+                cell_content = self.render_table_cell(cast(block_token.TableCell, cell))
+                # Limit to 20 columns
+                if len(cells) >= 20:
+                    break
+                cells.append(
+                    {
+                        "type": "raw_text",
+                        "text": cell_content or " ",
+                    },
+                )
         return cells
 
     def render_table_row(
@@ -255,9 +268,10 @@ class SlackBlocksRenderer(BaseRenderer):
         Render a table row.
         """
         cells = []
-        for cell in token.children:
-            cell_content = self.render_table_cell(cell)
-            cells.append(cell_content or " ")
+        if token.children:
+            for cell in token.children:
+                cell_content = self.render_table_cell(cast(block_token.TableCell, cell))
+                cells.append(cell_content or " ")
 
         if is_header:
             return f"*{' | '.join(cells)}*"
