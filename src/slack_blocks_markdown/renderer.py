@@ -4,9 +4,10 @@ Slack Blocks Renderer for Mistletoe
 This module provides a custom renderer that converts Markdown to Slack Block Kit blocks.
 """
 
-from typing import Any
+from typing import Any, cast
 
-from mistletoe.base_renderer import BaseRenderer
+from mistletoe import block_token, span_token  # type: ignore[import-untyped]
+from mistletoe.base_renderer import BaseRenderer  # type: ignore[import-untyped]
 from slack_sdk.models.blocks import (
     Block,
     DividerBlock,
@@ -26,7 +27,7 @@ class SlackBlocksRenderer(BaseRenderer):
     Returns a list of Block objects that can be used with Slack's messaging APIs.
     """
 
-    def __init__(self, *extras):
+    def __init__(self, *extras: type[Any]) -> None:
         """
         Initialize the Slack blocks renderer.
 
@@ -37,7 +38,7 @@ class SlackBlocksRenderer(BaseRenderer):
         self.blocks: list[Block] = []
         self.current_text_parts: list[str] = []
 
-    def render_document(self, token) -> list[Block]:
+    def render_document(self, token: block_token.Document) -> list[Block]:  # type: ignore[override]
         """
         Render the entire document and return the list of blocks.
 
@@ -51,7 +52,7 @@ class SlackBlocksRenderer(BaseRenderer):
         self.render_inner(token)
         return self.blocks
 
-    def render_heading(self, token) -> str:
+    def render_heading(self, token: block_token.Heading) -> str:
         """
         Render heading as HeaderBlock.
 
@@ -68,7 +69,7 @@ class SlackBlocksRenderer(BaseRenderer):
         self.blocks.append(header_block)
         return ""
 
-    def render_paragraph(self, token) -> str:
+    def render_paragraph(self, token: block_token.Paragraph) -> str:
         """
         Render paragraph as SectionBlock with MarkdownTextObject.
         """
@@ -84,7 +85,7 @@ class SlackBlocksRenderer(BaseRenderer):
             self.blocks.append(section_block)
         return ""
 
-    def render_block_code(self, token) -> str:
+    def render_block_code(self, token: block_token.BlockCode) -> str:
         """
         Render code block as SectionBlock with preformatted text.
         """
@@ -103,7 +104,7 @@ class SlackBlocksRenderer(BaseRenderer):
         self.blocks.append(section_block)
         return ""
 
-    def render_quote(self, token) -> str:
+    def render_quote(self, token: block_token.Quote) -> str:
         """
         Render blockquote as SectionBlock with quote formatting.
         """
@@ -114,7 +115,7 @@ class SlackBlocksRenderer(BaseRenderer):
                 # This is typically a Paragraph, extract its content
                 content_parts = []
                 for subchild in child.children:
-                    content_parts.append(self.render(subchild))
+                    content_parts.append(cast(str, self.render(subchild)))
                 paragraph_content = "".join(content_parts).strip()
                 if paragraph_content:
                     quote_parts.append(paragraph_content)
@@ -140,7 +141,7 @@ class SlackBlocksRenderer(BaseRenderer):
             self.blocks.append(section_block)
         return ""
 
-    def render_list(self, token) -> str:
+    def render_list(self, token: block_token.List) -> str:
         """
         Render list as SectionBlock with formatted list items.
         """
@@ -172,7 +173,7 @@ class SlackBlocksRenderer(BaseRenderer):
 
         return ""
 
-    def render_list_item(self, token) -> str:
+    def render_list_item(self, token: block_token.ListItem) -> str:
         """
         Render list item content (used by render_list).
         This extracts the text content without creating a new block.
@@ -183,12 +184,12 @@ class SlackBlocksRenderer(BaseRenderer):
             if hasattr(child, "children"):
                 # This is typically a Paragraph, extract its text
                 for subchild in child.children:
-                    content_parts.append(self.render(subchild))
+                    content_parts.append(cast(str, self.render(subchild)))
             else:
-                content_parts.append(self.render(child))
+                content_parts.append(cast(str, self.render(child)))
         return "".join(content_parts)
 
-    def render_thematic_break(self, token) -> str:
+    def render_thematic_break(self, token: block_token.ThematicBreak) -> str:
         """
         Render horizontal rule as DividerBlock.
         """
@@ -196,7 +197,7 @@ class SlackBlocksRenderer(BaseRenderer):
         self.blocks.append(divider_block)
         return ""
 
-    def render_table(self, token) -> str:
+    def render_table(self, token: block_token.Table) -> str:
         """
         Render table as TableBlock with proper cell structure.
         """
@@ -221,14 +222,17 @@ class SlackBlocksRenderer(BaseRenderer):
             self.blocks.append(table_block)
         return ""
 
-    def _render_table_row_as_cells(self, token) -> list[dict[str, Any]]:
+    def _render_table_row_as_cells(
+        self,
+        token: block_token.TableRow,
+    ) -> list[dict[str, Any]]:
         """
         Render a table row as a list of cell objects for TableBlock.
 
         Returns:
             List of cell objects with type and content
         """
-        cells = []
+        cells: list[dict[str, Any]] = []
         for cell in token.children:
             cell_content = self.render_table_cell(cell)
             # Limit to 20 columns
@@ -242,7 +246,11 @@ class SlackBlocksRenderer(BaseRenderer):
             )
         return cells
 
-    def render_table_row(self, token, is_header=False) -> str:
+    def render_table_row(
+        self,
+        token: block_token.TableRow,
+        is_header: bool = False,
+    ) -> str:
         """
         Render a table row.
         """
@@ -255,43 +263,43 @@ class SlackBlocksRenderer(BaseRenderer):
             return f"*{' | '.join(cells)}*"
         return " | ".join(cells)
 
-    def render_table_cell(self, token) -> str:
+    def render_table_cell(self, token: block_token.TableCell) -> str:
         """
         Render a table cell.
         """
-        return self.render_inner(token).strip()
+        return self.render_inner(token).strip()  # type: ignore[no-any-return]
 
     # Inline element renderers - these return formatted text
 
-    def render_strong(self, token) -> str:
+    def render_strong(self, token: span_token.Strong) -> str:
         """
         Render bold text with Slack markdown formatting.
         """
         content = self.render_inner(token)
         return f"*{content}*"
 
-    def render_emphasis(self, token) -> str:
+    def render_emphasis(self, token: span_token.Emphasis) -> str:
         """
         Render italic text with Slack markdown formatting.
         """
         content = self.render_inner(token)
         return f"_{content}_"
 
-    def render_strikethrough(self, token) -> str:
+    def render_strikethrough(self, token: span_token.Strikethrough) -> str:
         """
         Render strikethrough text with Slack markdown formatting.
         """
         content = self.render_inner(token)
         return f"~{content}~"
 
-    def render_inline_code(self, token) -> str:
+    def render_inline_code(self, token: span_token.InlineCode) -> str:
         """
         Render inline code with Slack markdown formatting.
         """
         content = self.render_inner(token)
         return f"`{content}`"
 
-    def render_link(self, token) -> str:
+    def render_link(self, token: span_token.Link) -> str:
         """
         Render link with Slack markdown formatting.
         """
@@ -302,13 +310,13 @@ class SlackBlocksRenderer(BaseRenderer):
             return f"<{url}|{text}>"
         return f"<{url}>"
 
-    def render_auto_link(self, token) -> str:
+    def render_auto_link(self, token: span_token.AutoLink) -> str:
         """
         Render auto link with Slack markdown formatting.
         """
         return f"<{token.target}>"
 
-    def render_image(self, token) -> str:
+    def render_image(self, token: span_token.Image) -> str:
         """
         Render image as a link (Slack blocks don't support inline images in text).
         """
@@ -317,28 +325,28 @@ class SlackBlocksRenderer(BaseRenderer):
             return f"<{token.src}|{alt_text}>"
         return f"<{token.src}>"
 
-    def render_line_break(self, token) -> str:
+    def render_line_break(self, token: span_token.LineBreak) -> str:
         """
         Render line break.
         """
         return "\n" if token.soft else "\n\n"
 
-    def render_raw_text(self, token) -> str:
+    def render_raw_text(self, token: span_token.RawText) -> str:
         """
         Render raw text content.
         """
-        return token.content
+        return token.content  # type: ignore[no-any-return]
 
-    def render_escape_sequence(self, token) -> str:
+    def render_escape_sequence(self, token: span_token.EscapeSequence) -> str:
         """
         Render escaped characters.
         """
-        return self.render_inner(token)
+        return self.render_inner(token)  # type: ignore[no-any-return]
 
-    def render(self, token):
+    def render(self, token: Any) -> list[Block] | str:
         """
         Override the base render method to handle our custom return type.
         """
         if token.__class__.__name__ == "Document":
             return self.render_document(token)
-        return super().render(token)
+        return super().render(token)  # type: ignore[no-any-return]

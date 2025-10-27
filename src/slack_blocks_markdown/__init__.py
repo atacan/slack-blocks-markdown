@@ -9,7 +9,7 @@ from .renderer import SlackBlocksRenderer
 # Convenience function for simple usage
 def markdown_to_blocks(markdown_text: str) -> list:
     """Convert markdown text to Slack blocks"""
-    from mistletoe import Document
+    from mistletoe import Document  # type: ignore[import-untyped]
 
     with SlackBlocksRenderer() as renderer:
         document = Document(markdown_text)

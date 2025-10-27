@@ -53,7 +53,7 @@ class TableBlock(Block):
         """
         Convert the TableBlock to a dictionary for JSON serialization.
         """
-        result = {
+        result: dict[str, Any] = {
             "type": self.type,
             "rows": self.rows,
         }
