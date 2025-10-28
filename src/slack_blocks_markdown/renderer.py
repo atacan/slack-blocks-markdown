@@ -352,8 +352,11 @@ class SlackBlocksRenderer(BaseRenderer):
     def render_table_cell(self, token: block_token.TableCell) -> str:
         """
         Render a table cell.
+
+        Table cells use raw_text type which doesn't support markdown formatting,
+        so we strip all formatting to display plain text only.
         """
-        return self.render_inner(token).strip()  # type: ignore[no-any-return]
+        return self._extract_plain_text_from_children(token).strip()
 
     # Inline element renderers - these return formatted text
 

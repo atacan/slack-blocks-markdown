@@ -196,6 +196,84 @@ class TestTables:
         assert blocks[0].type == "table"
         assert len(blocks[0].rows) == 3  # Header + 2 data rows
 
+    def test_table_with_bold_text_strips_formatting(self, renderer):
+        """Test that bold formatting in table cells is stripped (raw_text only)"""
+        markdown = """| Name | Status |
+|------|--------|
+| **Important** | Done |
+| Task | **Complete** |"""
+
+        document = Document(markdown)
+        blocks = renderer.render(document)
+
+        assert len(blocks) == 1
+        assert blocks[0].type == "table"
+
+        # Check header row (first row)
+        header_row = blocks[0].rows[0]
+        assert header_row[0]["text"] == "Name"
+        assert header_row[1]["text"] == "Status"
+
+        # Check data rows - should not have asterisks
+        row1 = blocks[0].rows[1]
+        assert row1[0]["text"] == "Important"
+        assert "*" not in row1[0]["text"]
+        assert row1[1]["text"] == "Done"
+
+        row2 = blocks[0].rows[2]
+        assert row2[0]["text"] == "Task"
+        assert row2[1]["text"] == "Complete"
+        assert "*" not in row2[1]["text"]
+
+    def test_table_with_italic_text_strips_formatting(self, renderer):
+        """Test that italic formatting in table cells is stripped"""
+        markdown = """| Item | _Priority_ |
+|------|------------|
+| Fix | _High_ |"""
+
+        document = Document(markdown)
+        blocks = renderer.render(document)
+
+        assert len(blocks) == 1
+        header_row = blocks[0].rows[0]
+        assert header_row[1]["text"] == "Priority"
+        assert "_" not in header_row[1]["text"]
+
+        row1 = blocks[0].rows[1]
+        assert row1[1]["text"] == "High"
+        assert "_" not in row1[1]["text"]
+
+    def test_table_with_code_text_strips_formatting(self, renderer):
+        """Test that inline code in table cells is stripped"""
+        markdown = """| Config | Value |
+|--------|-------|
+| `debug` | true |"""
+
+        document = Document(markdown)
+        blocks = renderer.render(document)
+
+        assert len(blocks) == 1
+        row1 = blocks[0].rows[1]
+        assert row1[0]["text"] == "debug"
+        assert "`" not in row1[0]["text"]
+
+    def test_table_with_mixed_formatting(self, renderer):
+        """Test that mixed formatting in table cells is all stripped"""
+        markdown = """| Feature | Status |
+|---------|--------|
+| **Auth** with `API` | _Ready_ |"""
+
+        document = Document(markdown)
+        blocks = renderer.render(document)
+
+        assert len(blocks) == 1
+        row1 = blocks[0].rows[1]
+        assert row1[0]["text"] == "Auth with API"
+        assert "*" not in row1[0]["text"]
+        assert "`" not in row1[0]["text"]
+        assert row1[1]["text"] == "Ready"
+        assert "_" not in row1[1]["text"]
+
 
 class TestConstraints:
     """Test Slack Block Kit constraint handling"""
