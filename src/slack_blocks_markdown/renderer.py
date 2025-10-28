@@ -159,11 +159,7 @@ class SlackBlocksRenderer(BaseRenderer):
                     # Check if this is an ordered list with a start attribute
                     if hasattr(token, "start") and token.start is not None:
                         # Ordered list
-                        start_num = (
-                            int(token.start)
-                            if isinstance(token.start, int)
-                            else int(token.start())
-                        )  # type: ignore[misc]
+                        start_num = int(token.start)
                         list_items.append(f"{i + start_num}. {item_content}")
                     else:
                         # Unordered list
