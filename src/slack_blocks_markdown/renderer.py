@@ -38,6 +38,75 @@ class SlackBlocksRenderer(BaseRenderer):
         self.blocks: list[Block] = []
         self.current_text_parts: list[str] = []
 
+    def _extract_plain_text(self, token: Any) -> str:
+        """
+        Extract plain text from a token without any markdown formatting.
+
+        This is used for contexts where only plain text is allowed (e.g., HeaderBlock).
+
+        Args:
+            token: The token to extract text from
+
+        Returns:
+            Plain text string without markdown formatting
+        """
+        # Handle raw text directly
+        if isinstance(token, span_token.RawText):
+            return token.content
+
+        # For formatting tokens (bold, italic, code, etc.), extract inner text
+        if isinstance(
+            token,
+            span_token.Strong
+            | span_token.Emphasis
+            | span_token.Strikethrough
+            | span_token.InlineCode,
+        ):
+            return self._extract_plain_text_from_children(token)
+
+        # For links, extract the link text
+        if isinstance(token, span_token.Link | span_token.AutoLink):
+            if hasattr(token, "children") and token.children:
+                return self._extract_plain_text_from_children(token)
+            # For autolinks, return the URL
+            return getattr(token, "target", "")
+
+        # For images, return alt text or empty string
+        if isinstance(token, span_token.Image):
+            if hasattr(token, "children") and token.children:
+                return self._extract_plain_text_from_children(token)
+            return ""
+
+        # For escape sequences, extract content
+        if isinstance(token, span_token.EscapeSequence):
+            return self._extract_plain_text_from_children(token)
+
+        # For line breaks, return space
+        if isinstance(token, span_token.LineBreak):
+            return " " if token.soft else " "
+
+        # Default: try to extract from children
+        if hasattr(token, "children") and token.children:
+            return self._extract_plain_text_from_children(token)
+
+        return ""
+
+    def _extract_plain_text_from_children(self, token: Any) -> str:
+        """
+        Extract plain text from all children of a token.
+
+        Args:
+            token: The token whose children to process
+
+        Returns:
+            Combined plain text from all children
+        """
+        parts = []
+        if hasattr(token, "children") and token.children:
+            for child in token.children:
+                parts.append(self._extract_plain_text(child))
+        return "".join(parts)
+
     def render_document(self, token: block_token.Document) -> list[Block]:  # type: ignore[override]
         """
         Render the entire document and return the list of blocks.
@@ -57,8 +126,10 @@ class SlackBlocksRenderer(BaseRenderer):
         Render heading as HeaderBlock.
 
         HeaderBlock is limited to 150 characters and only supports plain text.
+        Markdown formatting is stripped since HeaderBlock doesn't support it.
         """
-        text_content = self.render_inner(token).strip()
+        # Extract plain text without markdown formatting
+        text_content = self._extract_plain_text_from_children(token).strip()
         # Truncate if too long
         if len(text_content) > 150:
             text_content = text_content[:147] + "..."

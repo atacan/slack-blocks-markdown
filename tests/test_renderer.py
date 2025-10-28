@@ -20,6 +20,53 @@ class TestBasicRendering:
         assert isinstance(blocks[0], HeaderBlock)
         assert blocks[0].text.text == "Test Heading"
 
+    def test_heading_with_bold_strips_formatting(self, renderer):
+        """Test that bold formatting in headings is stripped (plain text only)"""
+        markdown = "### **Chapter 5**"
+        document = Document(markdown)
+        blocks = renderer.render(document)
+
+        assert len(blocks) == 1
+        assert isinstance(blocks[0], HeaderBlock)
+        # Should be plain text without asterisks
+        assert blocks[0].text.text == "Chapter 5"
+        assert "*" not in blocks[0].text.text
+
+    def test_heading_with_italic_strips_formatting(self, renderer):
+        """Test that italic formatting in headings is stripped"""
+        markdown = "## _Important Section_"
+        document = Document(markdown)
+        blocks = renderer.render(document)
+
+        assert len(blocks) == 1
+        assert isinstance(blocks[0], HeaderBlock)
+        assert blocks[0].text.text == "Important Section"
+        assert "_" not in blocks[0].text.text
+
+    def test_heading_with_inline_code_strips_formatting(self, renderer):
+        """Test that inline code in headings is stripped"""
+        markdown = "# Working with `config.json`"
+        document = Document(markdown)
+        blocks = renderer.render(document)
+
+        assert len(blocks) == 1
+        assert isinstance(blocks[0], HeaderBlock)
+        assert blocks[0].text.text == "Working with config.json"
+        assert "`" not in blocks[0].text.text
+
+    def test_heading_with_mixed_formatting(self, renderer):
+        """Test that mixed formatting in headings is all stripped"""
+        markdown = "## **Bold** and _italic_ with `code`"
+        document = Document(markdown)
+        blocks = renderer.render(document)
+
+        assert len(blocks) == 1
+        assert isinstance(blocks[0], HeaderBlock)
+        assert blocks[0].text.text == "Bold and italic with code"
+        assert "*" not in blocks[0].text.text
+        assert "_" not in blocks[0].text.text
+        assert "`" not in blocks[0].text.text
+
     def test_paragraph_renders_to_section_block(self, renderer):
         """Test that paragraphs become SectionBlocks"""
         markdown = "This is a paragraph with **bold** text."
