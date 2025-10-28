@@ -52,7 +52,7 @@ class SlackBlocksRenderer(BaseRenderer):
         """
         # Handle raw text directly
         if isinstance(token, span_token.RawText):
-            return token.content
+            return str(token.content)
 
         # For formatting tokens (bold, italic, code, etc.), extract inner text
         if isinstance(
@@ -230,7 +230,7 @@ class SlackBlocksRenderer(BaseRenderer):
                     # Check if this is an ordered list with a start attribute
                     if hasattr(token, "start") and token.start is not None:
                         # Ordered list
-                        start_num = int(token.start)
+                        start_num = int(str(token.start))
                         list_items.append(f"{i + start_num}. {item_content}")
                     else:
                         # Unordered list
