@@ -261,7 +261,7 @@
                 "type": "rich_text_section"
               }
             ],
-            "indent": 20,
+            "indent": 1,
             "style": "bullet",
             "type": "rich_text_list"
           }
@@ -282,7 +282,7 @@
                 "type": "rich_text_section"
               }
             ],
-            "indent": 40,
+            "indent": 2,
             "style": "bullet",
             "type": "rich_text_list"
           }
@@ -303,7 +303,7 @@
                 "type": "rich_text_section"
               }
             ],
-            "indent": 20,
+            "indent": 1,
             "style": "bullet",
             "type": "rich_text_list"
           }
@@ -753,7 +753,7 @@
                 "type": "rich_text_section"
               }
             ],
-            "indent": 20,
+            "indent": 1,
             "style": "bullet",
             "type": "rich_text_list"
           }

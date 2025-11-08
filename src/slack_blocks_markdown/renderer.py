@@ -405,9 +405,9 @@ class SlackBlocksRenderer(BaseRenderer):
 
         # Collect list item sections and nested lists
         list_elements: list[dict[str, Any]] = []
-        nested_lists: list[
-            tuple[int, block_token.List, int]
-        ] = []  # (position, list_token, indent)
+        nested_lists: list[tuple[int, block_token.List, int]] = (
+            []
+        )  # (position, list_token, indent)
 
         if token.children:
             for child in token.children:
@@ -442,8 +442,8 @@ class SlackBlocksRenderer(BaseRenderer):
                 "elements": list_elements,
             }
             if indent > 0:
-                # Indent by 20 pixels per level (Slack's default)
-                list_element_dict["indent"] = indent * 20
+                # Use indent level directly (0-8 allowed by Slack)
+                list_element_dict["indent"] = indent
             if offset is not None:
                 list_element_dict["offset"] = offset
 
