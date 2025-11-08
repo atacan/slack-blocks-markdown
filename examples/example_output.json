@@ -3,28 +3,526 @@
     "blocks": [
       {
         "text": {
-          "text": "Welcome to our project!",
+          "text": "Slack Blocks Markdown Renderer",
           "type": "plain_text"
         },
         "type": "header"
       },
       {
         "text": {
-          "text": "This is a *bold* announcement about our new features:",
+          "text": "This renderer now supports *native Slack rich text blocks* with proper formatting!",
           "type": "mrkdwn"
         },
         "type": "section"
       },
       {
         "text": {
-          "text": "\u2022 \u2705 User authentication\n\u2022 \u2705 Real-time updates\n\u2022 \ud83d\udea7 Mobile app (coming soon)",
+          "text": "Features",
+          "type": "plain_text"
+        },
+        "type": "header"
+      },
+      {
+        "text": {
+          "text": "Lists with Native Bullets",
+          "type": "plain_text"
+        },
+        "type": "header"
+      },
+      {
+        "text": {
+          "text": "Unordered lists now use native Slack bullets (not \u2022 character):",
           "type": "mrkdwn"
         },
         "type": "section"
       },
       {
+        "elements": [
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "style": {
+                      "bold": true
+                    },
+                    "text": "Bold item",
+                    "type": "text"
+                  },
+                  {
+                    "text": " with emphasis",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "style": {
+                      "italic": true
+                    },
+                    "text": "Italic item",
+                    "type": "text"
+                  },
+                  {
+                    "text": " for subtle text",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Item with ",
+                    "type": "text"
+                  },
+                  {
+                    "style": {
+                      "code": true
+                    },
+                    "text": "inline code",
+                    "type": "text"
+                  },
+                  {
+                    "text": " formatting",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Item with ",
+                    "type": "text"
+                  },
+                  {
+                    "text": "a link",
+                    "type": "link",
+                    "url": "https://github.com/slack-blocks-markdown"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "style": "bullet",
+            "type": "rich_text_list"
+          }
+        ],
+        "type": "rich_text"
+      },
+      {
         "text": {
-          "text": ">*Note*: This is still in beta, so please report any issues!",
+          "text": "Ordered Lists",
+          "type": "plain_text"
+        },
+        "type": "header"
+      },
+      {
+        "elements": [
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "First step in the process",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Second step with ",
+                    "type": "text"
+                  },
+                  {
+                    "style": {
+                      "bold": true
+                    },
+                    "text": "bold text",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Third step with ",
+                    "type": "text"
+                  },
+                  {
+                    "style": {
+                      "italic": true
+                    },
+                    "text": "italic emphasis",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Final step with ",
+                    "type": "text"
+                  },
+                  {
+                    "style": {
+                      "code": true
+                    },
+                    "text": "code example",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "style": "ordered",
+            "type": "rich_text_list"
+          }
+        ],
+        "type": "rich_text"
+      },
+      {
+        "text": {
+          "text": "Nested Lists",
+          "type": "plain_text"
+        },
+        "type": "header"
+      },
+      {
+        "text": {
+          "text": "Multi-level lists with proper indentation:",
+          "type": "mrkdwn"
+        },
+        "type": "section"
+      },
+      {
+        "elements": [
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Top level item",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Another top level",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "style": "bullet",
+            "type": "rich_text_list"
+          }
+        ],
+        "type": "rich_text"
+      },
+      {
+        "elements": [
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Nested item 1.1",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Nested item 1.2 with ",
+                    "type": "text"
+                  },
+                  {
+                    "style": {
+                      "bold": true
+                    },
+                    "text": "bold",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "indent": 20,
+            "style": "bullet",
+            "type": "rich_text_list"
+          }
+        ],
+        "type": "rich_text"
+      },
+      {
+        "elements": [
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Deep nested item",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "indent": 40,
+            "style": "bullet",
+            "type": "rich_text_list"
+          }
+        ],
+        "type": "rich_text"
+      },
+      {
+        "elements": [
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Nested under second item",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "indent": 20,
+            "style": "bullet",
+            "type": "rich_text_list"
+          }
+        ],
+        "type": "rich_text"
+      },
+      {
+        "text": {
+          "text": "Code Blocks",
+          "type": "plain_text"
+        },
+        "type": "header"
+      },
+      {
+        "text": {
+          "text": "Code blocks use rich text preformatted elements:",
+          "type": "mrkdwn"
+        },
+        "type": "section"
+      },
+      {
+        "elements": [
+          {
+            "elements": [
+              {
+                "text": "def greet(name):\n    return f\"Hello, {name}!\"\n\nresult = greet(\"Slack\")\nprint(result)\n",
+                "type": "text"
+              }
+            ],
+            "type": "rich_text_preformatted"
+          }
+        ],
+        "type": "rich_text"
+      },
+      {
+        "text": {
+          "text": "Blockquotes",
+          "type": "plain_text"
+        },
+        "type": "header"
+      },
+      {
+        "text": {
+          "text": "Quotes now use native rich text formatting:",
+          "type": "mrkdwn"
+        },
+        "type": "section"
+      },
+      {
+        "elements": [
+          {
+            "elements": [
+              {
+                "text": "This is a ",
+                "type": "text"
+              },
+              {
+                "style": {
+                  "bold": true
+                },
+                "text": "powerful",
+                "type": "text"
+              },
+              {
+                "text": " feature that supports ",
+                "type": "text"
+              },
+              {
+                "style": {
+                  "italic": true
+                },
+                "text": "rich formatting",
+                "type": "text"
+              },
+              {
+                "text": " within quotes!",
+                "type": "text"
+              },
+              {
+                "text": "\n",
+                "type": "text"
+              },
+              {
+                "text": "You can have multiple paragraphs in quotes with ",
+                "type": "text"
+              },
+              {
+                "style": {
+                  "code": true
+                },
+                "text": "inline code",
+                "type": "text"
+              },
+              {
+                "text": " too.",
+                "type": "text"
+              }
+            ],
+            "type": "rich_text_quote"
+          }
+        ],
+        "type": "rich_text"
+      },
+      {
+        "text": {
+          "text": "Mixed Content",
+          "type": "plain_text"
+        },
+        "type": "header"
+      },
+      {
+        "text": {
+          "text": "Combine everything for complex messages:",
+          "type": "mrkdwn"
+        },
+        "type": "section"
+      },
+      {
+        "elements": [
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Start with setup instructions",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Review the ",
+                    "type": "text"
+                  },
+                  {
+                    "text": "documentation",
+                    "type": "link",
+                    "url": "https://docs.example.com"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Run the following command:",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "style": "ordered",
+            "type": "rich_text_list"
+          }
+        ],
+        "type": "rich_text"
+      },
+      {
+        "elements": [
+          {
+            "elements": [
+              {
+                "text": "npm install slack-blocks-markdown\n",
+                "type": "text"
+              }
+            ],
+            "type": "rich_text_preformatted"
+          }
+        ],
+        "type": "rich_text"
+      },
+      {
+        "elements": [
+          {
+            "elements": [
+              {
+                "style": {
+                  "bold": true
+                },
+                "text": "Pro tip",
+                "type": "text"
+              },
+              {
+                "text": ": Use ",
+                "type": "text"
+              },
+              {
+                "style": {
+                  "code": true
+                },
+                "text": "markdown_to_blocks()",
+                "type": "text"
+              },
+              {
+                "text": " for quick conversions!",
+                "type": "text"
+              }
+            ],
+            "type": "rich_text_quote"
+          }
+        ],
+        "type": "rich_text"
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "text": {
+          "text": "Summary",
+          "type": "plain_text"
+        },
+        "type": "header"
+      },
+      {
+        "text": {
+          "text": "All formatting is preserved with native Slack rendering! \ud83d\ude80",
           "type": "mrkdwn"
         },
         "type": "section"
@@ -35,21 +533,281 @@
     "blocks": [
       {
         "text": {
-          "text": "Quick Demo",
+          "text": "Quick Start Guide",
           "type": "plain_text"
         },
         "type": "header"
       },
       {
         "text": {
-          "text": "This is the *easiest way* to convert markdown to Slack blocks!",
+          "text": "Get started with *slack-blocks-markdown* in seconds!",
           "type": "mrkdwn"
         },
         "type": "section"
       },
       {
         "text": {
-          "text": "\u2022 Just call `markdown_to_blocks()`\n\u2022 Get back a list of block dictionaries\n\u2022 Ready for the Slack API!",
+          "text": "Installation",
+          "type": "plain_text"
+        },
+        "type": "header"
+      },
+      {
+        "elements": [
+          {
+            "elements": [
+              {
+                "text": "pip install slack-blocks-markdown\n",
+                "type": "text"
+              }
+            ],
+            "type": "rich_text_preformatted"
+          }
+        ],
+        "type": "rich_text"
+      },
+      {
+        "text": {
+          "text": "Basic Usage",
+          "type": "plain_text"
+        },
+        "type": "header"
+      },
+      {
+        "text": {
+          "text": "Follow these steps:",
+          "type": "mrkdwn"
+        },
+        "type": "section"
+      },
+      {
+        "elements": [
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Import the function: ",
+                    "type": "text"
+                  },
+                  {
+                    "style": {
+                      "code": true
+                    },
+                    "text": "from slack_blocks_markdown import markdown_to_blocks",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Convert your markdown: ",
+                    "type": "text"
+                  },
+                  {
+                    "style": {
+                      "code": true
+                    },
+                    "text": "blocks = markdown_to_blocks(markdown_text)",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Send to Slack API: ",
+                    "type": "text"
+                  },
+                  {
+                    "style": {
+                      "code": true
+                    },
+                    "text": "client.chat_postMessage(channel=channel, blocks=blocks)",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "style": "ordered",
+            "type": "rich_text_list"
+          }
+        ],
+        "type": "rich_text"
+      },
+      {
+        "text": {
+          "text": "Features",
+          "type": "plain_text"
+        },
+        "type": "header"
+      },
+      {
+        "text": {
+          "text": "Native support for:",
+          "type": "mrkdwn"
+        },
+        "type": "section"
+      },
+      {
+        "elements": [
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "style": {
+                      "bold": true
+                    },
+                    "text": "Bold",
+                    "type": "text"
+                  },
+                  {
+                    "text": " and ",
+                    "type": "text"
+                  },
+                  {
+                    "style": {
+                      "italic": true
+                    },
+                    "text": "italic",
+                    "type": "text"
+                  },
+                  {
+                    "text": " text",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "style": {
+                      "code": true
+                    },
+                    "text": "Inline code",
+                    "type": "text"
+                  },
+                  {
+                    "text": " snippets",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Links",
+                    "type": "link",
+                    "url": "https://api.slack.com"
+                  },
+                  {
+                    "text": " to external sites",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Nested lists",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "style": "bullet",
+            "type": "rich_text_list"
+          }
+        ],
+        "type": "rich_text"
+      },
+      {
+        "elements": [
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "With proper indentation",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "And rich formatting",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "indent": 20,
+            "style": "bullet",
+            "type": "rich_text_list"
+          }
+        ],
+        "type": "rich_text"
+      },
+      {
+        "elements": [
+          {
+            "elements": [
+              {
+                "style": {
+                  "bold": true
+                },
+                "text": "Tip",
+                "type": "text"
+              },
+              {
+                "text": ": All Slack-compatible markdown is automatically converted to native blocks!",
+                "type": "text"
+              }
+            ],
+            "type": "rich_text_quote"
+          }
+        ],
+        "type": "rich_text"
+      },
+      {
+        "text": {
+          "text": "Example Code",
+          "type": "plain_text"
+        },
+        "type": "header"
+      },
+      {
+        "elements": [
+          {
+            "elements": [
+              {
+                "text": "from slack_blocks_markdown import markdown_to_blocks\n\nmarkdown = \"# Hello **Slack**!\"\nblocks = markdown_to_blocks(markdown)\n# Ready to send! \ud83d\ude80\n",
+                "type": "text"
+              }
+            ],
+            "type": "rich_text_preformatted"
+          }
+        ],
+        "type": "rich_text"
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "text": {
+          "text": "That's it! You're ready to go! \u2728",
           "type": "mrkdwn"
         },
         "type": "section"

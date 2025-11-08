@@ -80,6 +80,8 @@ ignore = [
     "S101",  # Allow assert in tests
     "EM101",  # Allow string literals in exceptions
     "EM102",  # Allow f-string literals in exceptions
+    "COM812",  # Trailing comma conflicts with formatter
+    "ISC001",  # Implicit string concatenation conflicts with formatter
 ]
 
 [tool.ruff.lint.extend-per-file-ignores]

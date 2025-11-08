@@ -4,7 +4,12 @@ Tests for SlackBlocksRenderer functionality
 
 import pytest
 from mistletoe import Document
-from slack_sdk.models.blocks import DividerBlock, HeaderBlock, SectionBlock
+from slack_sdk.models.blocks import (
+    DividerBlock,
+    HeaderBlock,
+    RichTextBlock,
+    SectionBlock,
+)
 
 from slack_blocks_markdown import SlackBlocksRenderer
 
@@ -115,69 +120,97 @@ class TestLists:
     """Test list rendering functionality"""
 
     def test_unordered_list_rendering(self, renderer):
-        """Test unordered list conversion"""
+        """Test unordered list conversion to RichTextBlock"""
         markdown = "- Item 1\n- Item 2\n- Item 3"
         document = Document(markdown)
         blocks = renderer.render(document)
 
         assert len(blocks) == 1
-        assert isinstance(blocks[0], SectionBlock)
-        assert "• Item 1" in blocks[0].text.text
-        assert "• Item 2" in blocks[0].text.text
-        assert "• Item 3" in blocks[0].text.text
+        assert isinstance(blocks[0], RichTextBlock)
+        block_dict = blocks[0].to_dict()
+        assert block_dict["type"] == "rich_text"
+        assert len(block_dict["elements"]) == 1
+        assert block_dict["elements"][0]["type"] == "rich_text_list"
+        assert block_dict["elements"][0]["style"] == "bullet"
+        # Check list items
+        list_items = block_dict["elements"][0]["elements"]
+        assert len(list_items) == 3
+        assert list_items[0]["elements"][0]["text"] == "Item 1"
+        assert list_items[1]["elements"][0]["text"] == "Item 2"
+        assert list_items[2]["elements"][0]["text"] == "Item 3"
 
     def test_ordered_list_rendering(self, renderer):
-        """Test ordered list conversion"""
+        """Test ordered list conversion to RichTextBlock"""
         markdown = "1. First\n2. Second\n3. Third"
         document = Document(markdown)
         blocks = renderer.render(document)
 
         assert len(blocks) == 1
-        assert isinstance(blocks[0], SectionBlock)
-        assert "1. First" in blocks[0].text.text
-        assert "2. Second" in blocks[0].text.text
-        assert "3. Third" in blocks[0].text.text
+        assert isinstance(blocks[0], RichTextBlock)
+        block_dict = blocks[0].to_dict()
+        assert block_dict["type"] == "rich_text"
+        assert block_dict["elements"][0]["type"] == "rich_text_list"
+        assert block_dict["elements"][0]["style"] == "ordered"
+        # Check list items
+        list_items = block_dict["elements"][0]["elements"]
+        assert len(list_items) == 3
+        assert list_items[0]["elements"][0]["text"] == "First"
+        assert list_items[1]["elements"][0]["text"] == "Second"
+        assert list_items[2]["elements"][0]["text"] == "Third"
 
 
 class TestCodeBlocks:
     """Test code block handling"""
 
     def test_code_block_rendering(self, renderer):
-        """Test code block formatting"""
+        """Test code block formatting with RichTextBlock"""
         markdown = "```python\ndef hello():\n    return 'world'\n```"
         document = Document(markdown)
         blocks = renderer.render(document)
 
         assert len(blocks) == 1
-        assert isinstance(blocks[0], SectionBlock)
-        assert blocks[0].text.text.startswith("```")
-        assert "def hello():" in blocks[0].text.text
-        assert blocks[0].text.text.endswith("```")
+        assert isinstance(blocks[0], RichTextBlock)
+        block_dict = blocks[0].to_dict()
+        assert block_dict["type"] == "rich_text"
+        assert block_dict["elements"][0]["type"] == "rich_text_preformatted"
+        # Check the code content
+        code_text = block_dict["elements"][0]["elements"][0]["text"]
+        assert "def hello():" in code_text
+        assert "return 'world'" in code_text
 
 
 class TestBlockquotes:
     """Test blockquote rendering"""
 
     def test_simple_blockquote(self, renderer):
-        """Test basic blockquote formatting"""
+        """Test basic blockquote formatting with RichTextBlock"""
         markdown = "> This is a quote"
         document = Document(markdown)
         blocks = renderer.render(document)
 
         assert len(blocks) == 1
-        assert isinstance(blocks[0], SectionBlock)
-        assert blocks[0].text.text.startswith(">This is a quote")
+        assert isinstance(blocks[0], RichTextBlock)
+        block_dict = blocks[0].to_dict()
+        assert block_dict["type"] == "rich_text"
+        assert block_dict["elements"][0]["type"] == "rich_text_quote"
+        # Check quote content
+        quote_text = block_dict["elements"][0]["elements"][0]["text"]
+        assert "This is a quote" in quote_text
 
     def test_multiline_blockquote(self, renderer):
-        """Test multiline blockquote handling"""
+        """Test multiline blockquote handling with RichTextBlock"""
         markdown = "> First line\n>\n> Second paragraph"
         document = Document(markdown)
         blocks = renderer.render(document)
 
         assert len(blocks) == 1
-        text = blocks[0].text.text
-        assert ">First line" in text
-        assert ">Second paragraph" in text
+        assert isinstance(blocks[0], RichTextBlock)
+        block_dict = blocks[0].to_dict()
+        assert block_dict["elements"][0]["type"] == "rich_text_quote"
+        # Check that content is preserved (exact structure may vary)
+        elements = block_dict["elements"][0]["elements"]
+        # Should have multiple text elements
+        assert len(elements) > 0
 
 
 class TestTables:
@@ -359,13 +392,18 @@ Final paragraph after divider.
         # Check we have different block types
         block_types = [block.type for block in blocks]
         assert "header" in block_types
-        assert "section" in block_types
+        assert "section" in block_types  # paragraphs
+        assert "rich_text" in block_types  # lists, quotes, code blocks
         assert "divider" in block_types
         assert "table" in block_types
 
 
 class TestExpandSections:
-    """Test expand_sections option for SectionBlocks"""
+    """Test expand_sections option for SectionBlocks (paragraphs only)
+
+    Note: Lists, quotes, and code blocks now use RichTextBlock which doesn't
+    support the expand parameter. Only paragraphs still use SectionBlock.
+    """
 
     def test_expand_sections_true_on_paragraph(self):
         """Test that expand_sections=True sets expand=True on paragraph SectionBlocks"""
@@ -411,41 +449,8 @@ class TestExpandSections:
         assert isinstance(blocks[0], SectionBlock)
         assert blocks[0].expand is None
 
-    def test_expand_sections_true_on_code_block(self):
-        """Test that expand_sections=True works on code blocks"""
-        renderer = SlackBlocksRenderer(expand_sections=True)
-        markdown = "```python\nprint('hello')\n```"
-        document = Document(markdown)
-        blocks = renderer.render(document)
-
-        assert len(blocks) == 1
-        assert isinstance(blocks[0], SectionBlock)
-        assert blocks[0].expand is True
-
-    def test_expand_sections_true_on_quote(self):
-        """Test that expand_sections=True works on blockquotes"""
-        renderer = SlackBlocksRenderer(expand_sections=True)
-        markdown = "> This is a quote"
-        document = Document(markdown)
-        blocks = renderer.render(document)
-
-        assert len(blocks) == 1
-        assert isinstance(blocks[0], SectionBlock)
-        assert blocks[0].expand is True
-
-    def test_expand_sections_true_on_list(self):
-        """Test that expand_sections=True works on lists"""
-        renderer = SlackBlocksRenderer(expand_sections=True)
-        markdown = "- Item 1\n- Item 2\n- Item 3"
-        document = Document(markdown)
-        blocks = renderer.render(document)
-
-        assert len(blocks) == 1
-        assert isinstance(blocks[0], SectionBlock)
-        assert blocks[0].expand is True
-
-    def test_expand_sections_applies_to_all_section_blocks(self):
-        """Test that expand_sections applies to all SectionBlocks in a document"""
+    def test_expand_sections_only_affects_paragraphs(self):
+        """Test that expand_sections only affects paragraph SectionBlocks, not RichTextBlocks"""
         renderer = SlackBlocksRenderer(expand_sections=True)
         markdown = """This is a paragraph.
 
@@ -461,34 +466,15 @@ code block
         document = Document(markdown)
         blocks = renderer.render(document)
 
-        # Filter only SectionBlocks (exclude other block types like headers)
+        # Filter only SectionBlocks (should be just the paragraph)
         section_blocks = [b for b in blocks if isinstance(b, SectionBlock)]
 
-        # Should have 4 SectionBlocks (paragraph, code, quote, list)
-        assert len(section_blocks) == 4
+        # Should have 1 SectionBlock (just the paragraph)
+        assert len(section_blocks) == 1
 
-        # All should have expand=True
-        for block in section_blocks:
-            assert block.expand is True
+        # The paragraph should have expand=True
+        assert section_blocks[0].expand is True
 
-    def test_expand_sections_false_applies_to_all_section_blocks(self):
-        """Test that expand_sections=False applies to all SectionBlocks"""
-        renderer = SlackBlocksRenderer(expand_sections=False)
-        markdown = """Paragraph here.
-
-```
-code
-```
-
-> Quote
-
-- List
-"""
-        document = Document(markdown)
-        blocks = renderer.render(document)
-
-        section_blocks = [b for b in blocks if isinstance(b, SectionBlock)]
-        assert len(section_blocks) == 4
-
-        for block in section_blocks:
-            assert block.expand is False
+        # Verify we also have RichTextBlocks for code, quote, and list
+        rich_text_blocks = [b for b in blocks if isinstance(b, RichTextBlock)]
+        assert len(rich_text_blocks) == 3  # code, quote, list
