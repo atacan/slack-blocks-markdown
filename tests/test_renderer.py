@@ -6,6 +6,8 @@ import pytest
 from mistletoe import Document
 from slack_sdk.models.blocks import DividerBlock, HeaderBlock, SectionBlock
 
+from slack_blocks_markdown import SlackBlocksRenderer
+
 
 class TestBasicRendering:
     """Test basic markdown element rendering"""
@@ -360,3 +362,133 @@ Final paragraph after divider.
         assert "section" in block_types
         assert "divider" in block_types
         assert "table" in block_types
+
+
+class TestExpandSections:
+    """Test expand_sections option for SectionBlocks"""
+
+    def test_expand_sections_true_on_paragraph(self):
+        """Test that expand_sections=True sets expand=True on paragraph SectionBlocks"""
+        renderer = SlackBlocksRenderer(expand_sections=True)
+        markdown = "This is a paragraph."
+        document = Document(markdown)
+        blocks = renderer.render(document)
+
+        assert len(blocks) == 1
+        assert isinstance(blocks[0], SectionBlock)
+        assert blocks[0].expand is True
+
+    def test_expand_sections_false_on_paragraph(self):
+        """Test that expand_sections=False sets expand=False on paragraph SectionBlocks"""
+        renderer = SlackBlocksRenderer(expand_sections=False)
+        markdown = "This is a paragraph."
+        document = Document(markdown)
+        blocks = renderer.render(document)
+
+        assert len(blocks) == 1
+        assert isinstance(blocks[0], SectionBlock)
+        assert blocks[0].expand is False
+
+    def test_expand_sections_none_on_paragraph(self):
+        """Test that expand_sections=None (default) sets expand=None on paragraph SectionBlocks"""
+        renderer = SlackBlocksRenderer(expand_sections=None)
+        markdown = "This is a paragraph."
+        document = Document(markdown)
+        blocks = renderer.render(document)
+
+        assert len(blocks) == 1
+        assert isinstance(blocks[0], SectionBlock)
+        assert blocks[0].expand is None
+
+    def test_default_expand_sections_is_none(self):
+        """Test that default renderer has expand=None"""
+        renderer = SlackBlocksRenderer()
+        markdown = "This is a paragraph."
+        document = Document(markdown)
+        blocks = renderer.render(document)
+
+        assert len(blocks) == 1
+        assert isinstance(blocks[0], SectionBlock)
+        assert blocks[0].expand is None
+
+    def test_expand_sections_true_on_code_block(self):
+        """Test that expand_sections=True works on code blocks"""
+        renderer = SlackBlocksRenderer(expand_sections=True)
+        markdown = "```python\nprint('hello')\n```"
+        document = Document(markdown)
+        blocks = renderer.render(document)
+
+        assert len(blocks) == 1
+        assert isinstance(blocks[0], SectionBlock)
+        assert blocks[0].expand is True
+
+    def test_expand_sections_true_on_quote(self):
+        """Test that expand_sections=True works on blockquotes"""
+        renderer = SlackBlocksRenderer(expand_sections=True)
+        markdown = "> This is a quote"
+        document = Document(markdown)
+        blocks = renderer.render(document)
+
+        assert len(blocks) == 1
+        assert isinstance(blocks[0], SectionBlock)
+        assert blocks[0].expand is True
+
+    def test_expand_sections_true_on_list(self):
+        """Test that expand_sections=True works on lists"""
+        renderer = SlackBlocksRenderer(expand_sections=True)
+        markdown = "- Item 1\n- Item 2\n- Item 3"
+        document = Document(markdown)
+        blocks = renderer.render(document)
+
+        assert len(blocks) == 1
+        assert isinstance(blocks[0], SectionBlock)
+        assert blocks[0].expand is True
+
+    def test_expand_sections_applies_to_all_section_blocks(self):
+        """Test that expand_sections applies to all SectionBlocks in a document"""
+        renderer = SlackBlocksRenderer(expand_sections=True)
+        markdown = """This is a paragraph.
+
+```python
+code block
+```
+
+> A quote
+
+- List item 1
+- List item 2
+"""
+        document = Document(markdown)
+        blocks = renderer.render(document)
+
+        # Filter only SectionBlocks (exclude other block types like headers)
+        section_blocks = [b for b in blocks if isinstance(b, SectionBlock)]
+
+        # Should have 4 SectionBlocks (paragraph, code, quote, list)
+        assert len(section_blocks) == 4
+
+        # All should have expand=True
+        for block in section_blocks:
+            assert block.expand is True
+
+    def test_expand_sections_false_applies_to_all_section_blocks(self):
+        """Test that expand_sections=False applies to all SectionBlocks"""
+        renderer = SlackBlocksRenderer(expand_sections=False)
+        markdown = """Paragraph here.
+
+```
+code
+```
+
+> Quote
+
+- List
+"""
+        document = Document(markdown)
+        blocks = renderer.render(document)
+
+        section_blocks = [b for b in blocks if isinstance(b, SectionBlock)]
+        assert len(section_blocks) == 4
+
+        for block in section_blocks:
+            assert block.expand is False

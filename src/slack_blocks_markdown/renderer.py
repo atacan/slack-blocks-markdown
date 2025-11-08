@@ -27,16 +27,21 @@ class SlackBlocksRenderer(BaseRenderer):
     Returns a list of Block objects that can be used with Slack's messaging APIs.
     """
 
-    def __init__(self, *extras: type[Any]) -> None:
+    def __init__(self, *extras: type[Any], expand_sections: bool | None = None) -> None:
         """
         Initialize the Slack blocks renderer.
 
         Args:
             extras: Additional custom tokens to add to the parsing process
+            expand_sections: Whether to expand all section blocks by default.
+                If True, section blocks will always be fully expanded.
+                If False, Slack may show "Show more" button for long content.
+                If None (default), uses Slack's default behavior.
         """
         super().__init__(*extras)
         self.blocks: list[Block] = []
         self.current_text_parts: list[str] = []
+        self.expand_sections = expand_sections
 
     def _extract_plain_text(self, token: Any) -> str:
         """
@@ -152,6 +157,7 @@ class SlackBlocksRenderer(BaseRenderer):
 
             section_block = SectionBlock(
                 text=MarkdownTextObject(text=text_content),
+                expand=self.expand_sections,
             )
             self.blocks.append(section_block)
         return ""
@@ -172,6 +178,7 @@ class SlackBlocksRenderer(BaseRenderer):
 
         section_block = SectionBlock(
             text=MarkdownTextObject(text=formatted_code),
+            expand=self.expand_sections,
         )
         self.blocks.append(section_block)
         return ""
@@ -210,6 +217,7 @@ class SlackBlocksRenderer(BaseRenderer):
 
             section_block = SectionBlock(
                 text=MarkdownTextObject(text=formatted_quote),
+                expand=self.expand_sections,
             )
             self.blocks.append(section_block)
         return ""
@@ -246,6 +254,7 @@ class SlackBlocksRenderer(BaseRenderer):
 
             section_block = SectionBlock(
                 text=MarkdownTextObject(text=list_text),
+                expand=self.expand_sections,
             )
             self.blocks.append(section_block)
 
