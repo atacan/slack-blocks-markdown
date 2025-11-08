@@ -144,8 +144,8 @@ Add these secrets to your GitHub repository:
 #### Method 2: Automatic on Tags
 1. Create and push a git tag:
 ```bash
-git tag v0.1.1
-git push origin v0.1.1
+git tag v0.2.0
+git push origin v0.2.0
 ```
 2. GitHub Actions will automatically publish to PyPI and create a GitHub release
 
@@ -166,7 +166,7 @@ git push origin v0.1.1
 1. **Edit pyproject.toml**:
 ```toml
 [project]
-version = "0.1.1"  # Update this
+version = "0.2.0"  # Update this
 ```
 
 2. **Update CHANGELOG.md** with new features/fixes
@@ -174,14 +174,14 @@ version = "0.1.1"  # Update this
 3. **Commit changes**:
 ```bash
 git add pyproject.toml CHANGELOG.md
-git commit -m "Bump version to 0.1.1"
+git commit -m "Bump version to 0.2.0"
 ```
 
 4. **Create and push tag** (for automatic publishing):
 ```bash
-git tag v0.1.1
+git tag v0.2.0
 git push origin main
-git push origin v0.1.1
+git push origin v0.2.0
 ```
 
 ### Version Numbering Guidelines
@@ -274,8 +274,8 @@ pip install slack-blocks-markdown
 # Use manual dispatch → testpypi
 
 # For release
-git tag v0.1.1
-git push origin v0.1.1
+git tag v0.2.0
+git push origin v0.2.0
 # → Automatic PyPI publish + GitHub release
 ```
 

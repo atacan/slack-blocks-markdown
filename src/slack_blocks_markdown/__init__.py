@@ -77,4 +77,4 @@ __all__ = [
     "markdown_to_block_objects",
     "markdown_to_blocks",
 ]
-__version__ = "0.1.3"
+__version__ = "0.2.0"
