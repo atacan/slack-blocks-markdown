@@ -31,16 +31,16 @@ class SlackBlocksRenderer(BaseRenderer):
     Returns a list of Block objects that can be used with Slack's messaging APIs.
     """
 
-    def __init__(self, *extras: type[Any], expand_sections: bool | None = None) -> None:
+    def __init__(self, *extras: type[Any], expand_sections: bool | None = True) -> None:
         """
         Initialize the Slack blocks renderer.
 
         Args:
             extras: Additional custom tokens to add to the parsing process
             expand_sections: Whether to expand all section blocks by default.
-                If True, section blocks will always be fully expanded.
+                If True (default), section blocks will always be fully expanded.
                 If False, Slack may show "Show more" button for long content.
-                If None (default), uses Slack's default behavior.
+                If None, uses Slack's default behavior.
         """
         super().__init__(*extras)
         self.blocks: list[Block] = []

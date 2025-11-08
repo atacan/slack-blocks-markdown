@@ -428,7 +428,7 @@ class TestExpandSections:
         assert blocks[0].expand is False
 
     def test_expand_sections_none_on_paragraph(self):
-        """Test that expand_sections=None (default) sets expand=None on paragraph SectionBlocks"""
+        """Test that expand_sections=None sets expand=None on paragraph SectionBlocks"""
         renderer = SlackBlocksRenderer(expand_sections=None)
         markdown = "This is a paragraph."
         document = Document(markdown)
@@ -438,8 +438,8 @@ class TestExpandSections:
         assert isinstance(blocks[0], SectionBlock)
         assert blocks[0].expand is None
 
-    def test_default_expand_sections_is_none(self):
-        """Test that default renderer has expand=None"""
+    def test_default_expand_sections_is_true(self):
+        """Test that default renderer has expand=True"""
         renderer = SlackBlocksRenderer()
         markdown = "This is a paragraph."
         document = Document(markdown)
@@ -447,7 +447,7 @@ class TestExpandSections:
 
         assert len(blocks) == 1
         assert isinstance(blocks[0], SectionBlock)
-        assert blocks[0].expand is None
+        assert blocks[0].expand is True
 
     def test_expand_sections_only_affects_paragraphs(self):
         """Test that expand_sections only affects paragraph SectionBlocks, not RichTextBlocks"""

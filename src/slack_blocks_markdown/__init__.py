@@ -13,7 +13,7 @@ from .renderer import SlackBlocksRenderer
 # Convenience function for simple usage
 def markdown_to_blocks(
     markdown_text: str,
-    expand_sections: bool | None = None,
+    expand_sections: bool | None = True,
 ) -> list[dict[str, Any]]:
     """
     Convert markdown text to Slack blocks as dictionaries.
@@ -21,9 +21,9 @@ def markdown_to_blocks(
     Args:
         markdown_text: The markdown text to convert
         expand_sections: Whether to expand all section blocks by default.
-            If True, section blocks will always be fully expanded.
+            If True (default), section blocks will always be fully expanded.
             If False, Slack may show "Show more" button for long content.
-            If None (default), uses Slack's default behavior.
+            If None, uses Slack's default behavior.
 
     Returns:
         List of block dictionaries ready to use with Slack API
@@ -38,7 +38,7 @@ def markdown_to_blocks(
 
 def markdown_to_block_objects(
     markdown_text: str,
-    expand_sections: bool | None = None,
+    expand_sections: bool | None = True,
 ) -> list[Block]:
     """
     Convert markdown text to Slack Block objects.
@@ -49,9 +49,9 @@ def markdown_to_block_objects(
     Args:
         markdown_text: The markdown text to convert
         expand_sections: Whether to expand all section blocks by default.
-            If True, section blocks will always be fully expanded.
+            If True (default), section blocks will always be fully expanded.
             If False, Slack may show "Show more" button for long content.
-            If None (default), uses Slack's default behavior.
+            If None, uses Slack's default behavior.
 
     Returns:
         List of Block objects from slack_sdk
