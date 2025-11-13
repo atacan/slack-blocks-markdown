@@ -141,13 +141,18 @@ Add these secrets to your GitHub repository:
 3. Click "Run workflow"
 4. Choose environment (testpypi or pypi)
 
-#### Method 2: Automatic on Tags
-1. Create and push a git tag:
+#### Method 2: Automatic on Tags (Recommended for Releases)
+1. **Ensure version is bumped** in `pyproject.toml`
+2. **Create and push a git tag**:
 ```bash
 git tag v0.2.0
 git push origin v0.2.0
 ```
-2. GitHub Actions will automatically publish to PyPI and create a GitHub release
+3. GitHub Actions will automatically:
+   - Publish to PyPI (production)
+   - Create a GitHub release
+
+> **📝 Note**: This is the standard way to release. The workflow ONLY triggers on tags, not on commits or PR merges. After merging a PR with a version bump, remember to create and push the corresponding tag.
 
 ### Testing the Workflow
 
@@ -184,6 +189,10 @@ git push origin main
 git push origin v0.2.0
 ```
 
+> **⚠️ IMPORTANT**: After merging a PR with a version bump, you MUST create and push a git tag to trigger the PyPI publish workflow. Simply bumping the version number and merging is NOT enough - the workflow only triggers on tags matching the pattern `v*`.
+>
+> If you forget to create the tag, the package will not be published to PyPI automatically. You'll need to create and push the tag manually (as shown above) to trigger the workflow.
+
 ### Version Numbering Guidelines
 
 Follow [Semantic Versioning](https://semver.org/):
@@ -195,6 +204,24 @@ Follow [Semantic Versioning](https://semver.org/):
 ## Troubleshooting
 
 ### Common Issues
+
+#### PyPI Publish Workflow Didn't Trigger After Merging PR
+**Symptom**: You merged a PR with a version bump, but the PyPI publish workflow didn't run.
+
+**Cause**: The workflow only triggers on git tags matching `v*` pattern, not on regular commits or merges.
+
+**Solution**:
+```bash
+# Create the tag for the version in pyproject.toml
+git tag v0.2.0
+# Push the tag to trigger the workflow
+git push origin v0.2.0
+```
+
+The workflow will then:
+- Build the package
+- Publish to PyPI
+- Create a GitHub release
 
 #### "File already exists" Error
 - PyPI doesn't allow re-uploading the same version
@@ -273,11 +300,15 @@ pip install slack-blocks-markdown
 # For testing
 # Use manual dispatch → testpypi
 
-# For release
+# For release (REQUIRED after version bump)
+# 1. Update version in pyproject.toml and merge PR
+# 2. Create and push tag:
 git tag v0.2.0
 git push origin v0.2.0
 # → Automatic PyPI publish + GitHub release
 ```
+
+**Remember**: The tag is what triggers the publish workflow, not the PR merge!
 
 ### Important URLs
 - **PyPI Project**: https://pypi.org/project/slack-blocks-markdown/
