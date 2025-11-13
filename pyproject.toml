@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "slack-blocks-markdown"
-version = "0.1.7"
+version = "0.2.0"
 description = "Convert Markdown to Slack Block Kit blocks using mistletoe"
 readme = "README.md"
 license = {file = "LICENSE"}
@@ -80,6 +80,8 @@ ignore = [
     "S101",  # Allow assert in tests
     "EM101",  # Allow string literals in exceptions
     "EM102",  # Allow f-string literals in exceptions
+    "COM812",  # Trailing comma conflicts with formatter
+    "ISC001",  # Implicit string concatenation conflicts with formatter
 ]
 
 [tool.ruff.lint.extend-per-file-ignores]
