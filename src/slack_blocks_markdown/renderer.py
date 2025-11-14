@@ -350,7 +350,8 @@ class SlackBlocksRenderer(BaseRenderer):
         quote_elements: list[dict[str, Any]] = []
 
         if token.children:
-            for i, child in enumerate(token.children):
+            children_list = list(token.children)
+            for i, child in enumerate(children_list):
                 # Process paragraph content with formatting
                 if (
                     isinstance(child, block_token.Paragraph)
@@ -362,7 +363,7 @@ class SlackBlocksRenderer(BaseRenderer):
                         quote_elements.extend(parts)
 
                     # Add line breaks between paragraphs (except after the last one)
-                    if i < len(token.children) - 1:
+                    if i < len(children_list) - 1:
                         quote_elements.append({"type": "text", "text": "\n"})
 
         if quote_elements:
