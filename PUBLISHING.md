@@ -166,32 +166,81 @@ git push origin v0.2.0
 
 ## Version Management
 
-### Updating Version
+### Release Workflow Overview
 
-1. **Edit pyproject.toml**:
+The standard release process is:
+
+1. **Create feature branch** → Make changes + bump version in `pyproject.toml`
+2. **Open Pull Request** → Get reviewed and merged to `main`
+3. **Create tag on main** → Triggers automatic PyPI publish
+
+> **Why can't we create the tag in the PR?**
+>
+> - Git tags are commit-specific, not branch-specific
+> - If you create and push a tag on a feature branch, it triggers the publish workflow immediately (before PR review/merge)
+> - Tags should mark release points on the main branch, not feature branches
+> - After merging, the tag would point to the old feature branch commit, not the new merge commit on main
+
+### Standard Release Process
+
+#### Step 1: Prepare Release in Feature Branch
+
+1. **Create feature branch**:
+```bash
+git checkout -b fix-some-bug
+```
+
+2. **Make your changes**
+
+3. **Bump version in pyproject.toml**:
 ```toml
 [project]
-version = "0.2.0"  # Update this
+version = "0.2.1"  # Update this
 ```
 
-2. **Update CHANGELOG.md** with new features/fixes
+4. **Update CHANGELOG.md** with new features/fixes
 
-3. **Commit changes**:
+5. **Commit and push**:
 ```bash
-git add pyproject.toml CHANGELOG.md
-git commit -m "Bump version to 0.2.0"
+git add pyproject.toml CHANGELOG.md <other-files>
+git commit -m "fix: description of fix
+
+- Detailed changes
+- Bump version to 0.2.1"
+git push origin fix-some-bug
 ```
 
-4. **Create and push tag** (for automatic publishing):
+6. **Open Pull Request** targeting `main` branch
+
+#### Step 2: After PR is Merged
+
+1. **Switch to main and pull**:
 ```bash
-git tag v0.2.0
-git push origin main
-git push origin v0.2.0
+git checkout main
+git pull
 ```
 
-> **⚠️ IMPORTANT**: After merging a PR with a version bump, you MUST create and push a git tag to trigger the PyPI publish workflow. Simply bumping the version number and merging is NOT enough - the workflow only triggers on tags matching the pattern `v*`.
->
-> If you forget to create the tag, the package will not be published to PyPI automatically. You'll need to create and push the tag manually (as shown above) to trigger the workflow.
+2. **Create and push tag** (this triggers PyPI publish):
+```bash
+git tag v0.2.1
+git push origin v0.2.1
+```
+
+3. **Monitor the workflow**:
+   - GitHub Actions: https://github.com/atacan/slack-blocks-markdown/actions
+   - The workflow will automatically publish to PyPI and create a GitHub release
+
+> **⚠️ IMPORTANT**: The tag is what triggers the PyPI publish workflow, not the PR merge. Always remember to create and push the tag after merging!
+
+### Quick Reference
+
+```bash
+# After PR is merged to main:
+git checkout main
+git pull
+git tag v0.2.1          # Match version in pyproject.toml
+git push origin v0.2.1  # Triggers PyPI publish
+```
 
 ### Version Numbering Guidelines
 
@@ -208,14 +257,20 @@ Follow [Semantic Versioning](https://semver.org/):
 #### PyPI Publish Workflow Didn't Trigger After Merging PR
 **Symptom**: You merged a PR with a version bump, but the PyPI publish workflow didn't run.
 
-**Cause**: The workflow only triggers on git tags matching `v*` pattern, not on regular commits or merges.
+**Cause**: The workflow only triggers on git tags matching `v*` pattern, not on regular commits or merges. Creating the tag in the PR doesn't work because:
+- Tags are commit-specific, not branch-specific
+- Pushing a tag on a feature branch would trigger publishing before the PR is merged
+- The tag must be created on the main branch after merging
 
 **Solution**:
 ```bash
-# Create the tag for the version in pyproject.toml
-git tag v0.2.0
-# Push the tag to trigger the workflow
-git push origin v0.2.0
+# Switch to main and pull the merged changes
+git checkout main
+git pull
+
+# Create and push the tag
+git tag v0.2.1
+git push origin v0.2.1
 ```
 
 The workflow will then:
@@ -297,18 +352,24 @@ pip install slack-blocks-markdown
 
 ### GitHub Actions Workflow
 ```bash
-# For testing
+# For testing (manual)
 # Use manual dispatch → testpypi
 
-# For release (REQUIRED after version bump)
-# 1. Update version in pyproject.toml and merge PR
-# 2. Create and push tag:
-git tag v0.2.0
-git push origin v0.2.0
+# For release (standard workflow)
+# 1. Bump version in feature branch + open PR
+# 2. Merge PR to main
+# 3. Create and push tag from main:
+git checkout main
+git pull
+git tag v0.2.1
+git push origin v0.2.1
 # → Automatic PyPI publish + GitHub release
 ```
 
-**Remember**: The tag is what triggers the publish workflow, not the PR merge!
+**Remember**:
+- Tags must be created on `main` branch after merging
+- Tags cannot be part of the PR (they're commit-specific, not branch-specific)
+- The tag push is what triggers the publish workflow
 
 ### Important URLs
 - **PyPI Project**: https://pypi.org/project/slack-blocks-markdown/
