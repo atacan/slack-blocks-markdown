@@ -5,3 +5,14 @@ The renderer returns a list of `Block` objects.
 
 We use mistletoe python package to parse the markdown. It has `BaseRenderer` class that we can inherit from to create a custom renderer.
 You can see example implementations in the @.venv/lib/python3.13/site-packages/mistletoe/contrib folder, where you can understand how the renderer implementation works.
+
+## Development Guidelines
+
+Before committing changes, always run:
+```bash
+uv run mypy src/
+uv run pytest
+```
+This ensures type checking passes and all tests pass before committing.
+
+For the PyPI release process, see the PUBLISHING.md file.
