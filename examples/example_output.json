@@ -9,6 +9,7 @@
         "type": "header"
       },
       {
+        "expand": true,
         "text": {
           "text": "This renderer now supports *native Slack rich text blocks* with proper formatting!",
           "type": "mrkdwn"
@@ -30,6 +31,7 @@
         "type": "header"
       },
       {
+        "expand": true,
         "text": {
           "text": "Unordered lists now use native Slack bullets (not \u2022 character):",
           "type": "mrkdwn"
@@ -196,6 +198,7 @@
         "type": "header"
       },
       {
+        "expand": true,
         "text": {
           "text": "Multi-level lists with proper indentation:",
           "type": "mrkdwn"
@@ -214,25 +217,11 @@
                   }
                 ],
                 "type": "rich_text_section"
-              },
-              {
-                "elements": [
-                  {
-                    "text": "Another top level",
-                    "type": "text"
-                  }
-                ],
-                "type": "rich_text_section"
               }
             ],
             "style": "bullet",
             "type": "rich_text_list"
-          }
-        ],
-        "type": "rich_text"
-      },
-      {
-        "elements": [
+          },
           {
             "elements": [
               {
@@ -264,12 +253,7 @@
             "indent": 1,
             "style": "bullet",
             "type": "rich_text_list"
-          }
-        ],
-        "type": "rich_text"
-      },
-      {
-        "elements": [
+          },
           {
             "elements": [
               {
@@ -285,12 +269,22 @@
             "indent": 2,
             "style": "bullet",
             "type": "rich_text_list"
-          }
-        ],
-        "type": "rich_text"
-      },
-      {
-        "elements": [
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Another top level",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "style": "bullet",
+            "type": "rich_text_list"
+          },
           {
             "elements": [
               {
@@ -318,6 +312,7 @@
         "type": "header"
       },
       {
+        "expand": true,
         "text": {
           "text": "Code blocks use rich text preformatted elements:",
           "type": "mrkdwn"
@@ -346,6 +341,7 @@
         "type": "header"
       },
       {
+        "expand": true,
         "text": {
           "text": "Quotes now use native rich text formatting:",
           "type": "mrkdwn"
@@ -415,6 +411,7 @@
         "type": "header"
       },
       {
+        "expand": true,
         "text": {
           "text": "Combine everything for complex messages:",
           "type": "mrkdwn"
@@ -521,6 +518,7 @@
         "type": "header"
       },
       {
+        "expand": true,
         "text": {
           "text": "All formatting is preserved with native Slack rendering! \ud83d\ude80",
           "type": "mrkdwn"
@@ -539,6 +537,7 @@
         "type": "header"
       },
       {
+        "expand": true,
         "text": {
           "text": "Get started with *slack-blocks-markdown* in seconds!",
           "type": "mrkdwn"
@@ -574,6 +573,7 @@
         "type": "header"
       },
       {
+        "expand": true,
         "text": {
           "text": "Follow these steps:",
           "type": "mrkdwn"
@@ -647,6 +647,7 @@
         "type": "header"
       },
       {
+        "expand": true,
         "text": {
           "text": "Native support for:",
           "type": "mrkdwn"
@@ -726,12 +727,7 @@
             ],
             "style": "bullet",
             "type": "rich_text_list"
-          }
-        ],
-        "type": "rich_text"
-      },
-      {
-        "elements": [
+          },
           {
             "elements": [
               {
@@ -806,11 +802,879 @@
         "type": "divider"
       },
       {
+        "expand": true,
         "text": {
           "text": "That's it! You're ready to go! \u2728",
           "type": "mrkdwn"
         },
         "type": "section"
+      }
+    ]
+  },
+  "nested_lists_example": {
+    "blocks": [
+      {
+        "text": {
+          "text": "Nested Lists Demo",
+          "type": "plain_text"
+        },
+        "type": "header"
+      },
+      {
+        "text": {
+          "text": "Bug Fix Example",
+          "type": "plain_text"
+        },
+        "type": "header"
+      },
+      {
+        "expand": true,
+        "text": {
+          "text": "The original bug case - nested bullets in ordered list:",
+          "type": "mrkdwn"
+        },
+        "type": "section"
+      },
+      {
+        "elements": [
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Hello",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "style": "ordered",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "World",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Neptune",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Sun",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "indent": 1,
+            "style": "bullet",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Bye",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "style": "ordered",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Night",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Moon",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "indent": 1,
+            "style": "bullet",
+            "type": "rich_text_list"
+          }
+        ],
+        "type": "rich_text"
+      },
+      {
+        "text": {
+          "text": "Nested Ordered Lists",
+          "type": "plain_text"
+        },
+        "type": "header"
+      },
+      {
+        "expand": true,
+        "text": {
+          "text": "Shopping workflow with sub-steps:",
+          "type": "mrkdwn"
+        },
+        "type": "section"
+      },
+      {
+        "elements": [
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Prepare shopping list",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "style": "bullet",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Check inventory",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Review recipes",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Note special items",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "indent": 1,
+            "style": "ordered",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Go to store",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "style": "bullet",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Get shopping cart",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Follow list by aisle",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Check produce quality",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "indent": 1,
+            "style": "ordered",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Checkout process",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "style": "bullet",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Unload items",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Apply coupons",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Pay and bag",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "indent": 1,
+            "style": "ordered",
+            "type": "rich_text_list"
+          }
+        ],
+        "type": "rich_text"
+      },
+      {
+        "text": {
+          "text": "Deep Nesting (3 Levels)",
+          "type": "plain_text"
+        },
+        "type": "header"
+      },
+      {
+        "expand": true,
+        "text": {
+          "text": "Project organization structure:",
+          "type": "mrkdwn"
+        },
+        "type": "section"
+      },
+      {
+        "elements": [
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Backend Development",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "style": "ordered",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "API Layer",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "indent": 1,
+            "style": "bullet",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "REST endpoints",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "GraphQL resolvers",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Authentication middleware",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "indent": 2,
+            "style": "bullet",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Database",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "indent": 1,
+            "style": "bullet",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Schema design",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Migrations",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Indexing strategy",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "indent": 2,
+            "style": "bullet",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Frontend Development",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "style": "ordered",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Components",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "indent": 1,
+            "style": "bullet",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Shared UI elements",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Page layouts",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Form controls",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "indent": 2,
+            "style": "bullet",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "State Management",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "indent": 1,
+            "style": "bullet",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Redux store",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Actions and reducers",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Selectors",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "indent": 2,
+            "style": "bullet",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "DevOps",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "style": "ordered",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "CI/CD Pipeline",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "indent": 1,
+            "style": "bullet",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Build automation",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Test runners",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Deployment scripts",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "indent": 2,
+            "style": "bullet",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Infrastructure",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "indent": 1,
+            "style": "bullet",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Container orchestration",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Load balancing",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Monitoring setup",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "indent": 2,
+            "style": "bullet",
+            "type": "rich_text_list"
+          }
+        ],
+        "type": "rich_text"
+      },
+      {
+        "text": {
+          "text": "Mixed Formatting in Nested Lists",
+          "type": "plain_text"
+        },
+        "type": "header"
+      },
+      {
+        "expand": true,
+        "text": {
+          "text": "Feature checklist with rich text:",
+          "type": "mrkdwn"
+        },
+        "type": "section"
+      },
+      {
+        "elements": [
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "style": {
+                      "bold": true
+                    },
+                    "text": "Authentication System",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "style": "bullet",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "User registration with ",
+                    "type": "text"
+                  },
+                  {
+                    "style": {
+                      "code": true
+                    },
+                    "text": "email",
+                    "type": "text"
+                  },
+                  {
+                    "text": " validation",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Login with ",
+                    "type": "text"
+                  },
+                  {
+                    "text": "OAuth 2.0",
+                    "type": "link",
+                    "url": "https://oauth.net/2/"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "style": {
+                      "italic": true
+                    },
+                    "text": "Password reset",
+                    "type": "text"
+                  },
+                  {
+                    "text": " flow",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "~Session management~ (using JWT instead)",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "indent": 1,
+            "style": "ordered",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "style": {
+                      "bold": true
+                    },
+                    "text": "User Profile",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "style": "bullet",
+            "type": "rich_text_list"
+          },
+          {
+            "elements": [
+              {
+                "elements": [
+                  {
+                    "text": "Edit profile with ",
+                    "type": "text"
+                  },
+                  {
+                    "style": {
+                      "code": true
+                    },
+                    "text": "avatar",
+                    "type": "text"
+                  },
+                  {
+                    "text": " upload",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Privacy settings for ",
+                    "type": "text"
+                  },
+                  {
+                    "style": {
+                      "italic": true
+                    },
+                    "text": "public",
+                    "type": "text"
+                  },
+                  {
+                    "text": " vs ",
+                    "type": "text"
+                  },
+                  {
+                    "style": {
+                      "bold": true
+                    },
+                    "text": "private",
+                    "type": "text"
+                  },
+                  {
+                    "text": " data",
+                    "type": "text"
+                  }
+                ],
+                "type": "rich_text_section"
+              },
+              {
+                "elements": [
+                  {
+                    "text": "Link to ",
+                    "type": "text"
+                  },
+                  {
+                    "text": "external profiles",
+                    "type": "link",
+                    "url": "https://example.com"
+                  }
+                ],
+                "type": "rich_text_section"
+              }
+            ],
+            "indent": 1,
+            "style": "ordered",
+            "type": "rich_text_list"
+          }
+        ],
+        "type": "rich_text"
+      },
+      {
+        "elements": [
+          {
+            "elements": [
+              {
+                "style": {
+                  "bold": true
+                },
+                "text": "Note",
+                "type": "text"
+              },
+              {
+                "text": ": All nested items now appear directly under their parent items!",
+                "type": "text"
+              }
+            ],
+            "type": "rich_text_quote"
+          }
+        ],
+        "type": "rich_text"
       }
     ]
   }

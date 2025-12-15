@@ -158,6 +158,192 @@ class TestLists:
         assert list_items[1]["elements"][0]["text"] == "Second"
         assert list_items[2]["elements"][0]["text"] == "Third"
 
+    def test_nested_bullet_in_ordered_list(self, renderer):
+        """Test bullet list nested in ordered list - basic case from bug report"""
+        markdown = """1. Hello
+    - World
+    - Neptune
+    - Sun
+
+2. Bye
+    - Night
+    - Moon"""
+        document = Document(markdown)
+        blocks = renderer.render(document)
+
+        # Should be a single RichTextBlock, not multiple blocks
+        assert len(blocks) == 1
+        assert isinstance(blocks[0], RichTextBlock)
+
+        block_dict = blocks[0].to_dict()
+        elements = block_dict["elements"]
+
+        # Should have 4 rich_text_list elements in sequence:
+        # 1. Ordered list with "Hello" (parent #1)
+        # 2. Bullet list with ["World", "Neptune", "Sun"] (nested under #1)
+        # 3. Ordered list with "Bye" (parent #2)
+        # 4. Bullet list with ["Night", "Moon"] (nested under #2)
+        assert len(elements) == 4
+
+        # First element: ordered list with "Hello"
+        assert elements[0]["type"] == "rich_text_list"
+        assert elements[0]["style"] == "ordered"
+        assert len(elements[0]["elements"]) == 1
+        assert elements[0]["elements"][0]["elements"][0]["text"] == "Hello"
+
+        # Second element: bullet list with nested items from first parent
+        assert elements[1]["type"] == "rich_text_list"
+        assert elements[1]["style"] == "bullet"
+        assert elements[1]["indent"] == 1
+        assert len(elements[1]["elements"]) == 3
+        assert elements[1]["elements"][0]["elements"][0]["text"] == "World"
+        assert elements[1]["elements"][1]["elements"][0]["text"] == "Neptune"
+        assert elements[1]["elements"][2]["elements"][0]["text"] == "Sun"
+
+        # Third element: ordered list with "Bye"
+        assert elements[2]["type"] == "rich_text_list"
+        assert elements[2]["style"] == "ordered"
+        assert len(elements[2]["elements"]) == 1
+        assert elements[2]["elements"][0]["elements"][0]["text"] == "Bye"
+
+        # Fourth element: bullet list with nested items from second parent
+        assert elements[3]["type"] == "rich_text_list"
+        assert elements[3]["style"] == "bullet"
+        assert elements[3]["indent"] == 1
+        assert len(elements[3]["elements"]) == 2
+        assert elements[3]["elements"][0]["elements"][0]["text"] == "Night"
+        assert elements[3]["elements"][1]["elements"][0]["text"] == "Moon"
+
+    def test_nested_ordered_in_bullet_list(self, renderer):
+        """Test ordered list nested in bullet list"""
+        markdown = """- First
+    1. One
+    2. Two
+
+- Second
+    1. Alpha
+    2. Beta"""
+        document = Document(markdown)
+        blocks = renderer.render(document)
+
+        # Should be a single RichTextBlock
+        assert len(blocks) == 1
+        assert isinstance(blocks[0], RichTextBlock)
+
+        block_dict = blocks[0].to_dict()
+        elements = block_dict["elements"]
+
+        # Should have 4 elements in sequence
+        assert len(elements) == 4
+
+        # First: bullet list with "First"
+        assert elements[0]["type"] == "rich_text_list"
+        assert elements[0]["style"] == "bullet"
+        assert elements[0]["elements"][0]["elements"][0]["text"] == "First"
+
+        # Second: ordered list nested under "First"
+        assert elements[1]["type"] == "rich_text_list"
+        assert elements[1]["style"] == "ordered"
+        assert elements[1]["indent"] == 1
+        assert len(elements[1]["elements"]) == 2
+        assert elements[1]["elements"][0]["elements"][0]["text"] == "One"
+        assert elements[1]["elements"][1]["elements"][0]["text"] == "Two"
+
+        # Third: bullet list with "Second"
+        assert elements[2]["type"] == "rich_text_list"
+        assert elements[2]["style"] == "bullet"
+        assert elements[2]["elements"][0]["elements"][0]["text"] == "Second"
+
+        # Fourth: ordered list nested under "Second"
+        assert elements[3]["type"] == "rich_text_list"
+        assert elements[3]["style"] == "ordered"
+        assert elements[3]["indent"] == 1
+        assert len(elements[3]["elements"]) == 2
+        assert elements[3]["elements"][0]["elements"][0]["text"] == "Alpha"
+        assert elements[3]["elements"][1]["elements"][0]["text"] == "Beta"
+
+    def test_deeply_nested_lists(self, renderer):
+        """Test 3+ levels of nesting"""
+        markdown = """1. Level 1
+    - Level 2a
+        - Level 3a
+        - Level 3b
+    - Level 2b
+
+2. Another L1"""
+        document = Document(markdown)
+        blocks = renderer.render(document)
+
+        # Should be a single RichTextBlock
+        assert len(blocks) == 1
+        assert isinstance(blocks[0], RichTextBlock)
+
+        block_dict = blocks[0].to_dict()
+        elements = block_dict["elements"]
+
+        # Should have multiple list elements with proper indentation
+        assert len(elements) >= 4
+
+        # Verify indent levels are progressive
+        found_indent_0 = any(
+            e.get("indent", 0) == 0 for e in elements if e["type"] == "rich_text_list"
+        )
+        found_indent_1 = any(
+            e.get("indent") == 1 for e in elements if e["type"] == "rich_text_list"
+        )
+        found_indent_2 = any(
+            e.get("indent") == 2 for e in elements if e["type"] == "rich_text_list"
+        )
+
+        assert found_indent_0
+        assert found_indent_1
+        assert found_indent_2
+
+    def test_multiple_items_with_nested_lists(self, renderer):
+        """Test list with multiple parent items that each have nested children"""
+        markdown = """- Parent A
+    - Child A1
+    - Child A2
+
+- Parent B
+    - Child B1
+
+- Parent C
+    - Child C1
+    - Child C2
+    - Child C3"""
+        document = Document(markdown)
+        blocks = renderer.render(document)
+
+        # Should be a single RichTextBlock
+        assert len(blocks) == 1
+        assert isinstance(blocks[0], RichTextBlock)
+
+        block_dict = blocks[0].to_dict()
+        elements = block_dict["elements"]
+
+        # Should have: parent A, nested A, parent B, nested B, parent C, nested C = 6 elements
+        assert len(elements) == 6
+
+        # All parent lists should have no indent (or indent=0)
+        parent_elements = [elements[0], elements[2], elements[4]]
+        for parent in parent_elements:
+            assert parent["type"] == "rich_text_list"
+            assert parent["style"] == "bullet"
+            assert parent.get("indent", 0) == 0
+
+        # All nested lists should have indent=1
+        nested_elements = [elements[1], elements[3], elements[5]]
+        for nested in nested_elements:
+            assert nested["type"] == "rich_text_list"
+            assert nested["style"] == "bullet"
+            assert nested["indent"] == 1
+
+        # Verify item counts
+        assert len(elements[1]["elements"]) == 2  # A1, A2
+        assert len(elements[3]["elements"]) == 1  # B1
+        assert len(elements[5]["elements"]) == 3  # C1, C2, C3
+
 
 class TestCodeBlocks:
     """Test code block handling"""
