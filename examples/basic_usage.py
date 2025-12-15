@@ -202,16 +202,145 @@ That's it! You're ready to go! ✨
     return blocks
 
 
+def nested_lists_example():
+    """
+    Example showcasing nested list rendering with proper structure
+
+    This demonstrates that nested lists now render correctly in a single block
+    with proper indentation, fixing the bug where sub-items appeared at the end.
+    """
+    sample_markdown = """# Nested Lists Demo
+
+## Bug Fix Example
+
+The original bug case - nested bullets in ordered list:
+
+1. Hello
+    - World
+    - Neptune
+    - Sun
+
+2. Bye
+    - Night
+    - Moon
+
+## Nested Ordered Lists
+
+Shopping workflow with sub-steps:
+
+- Prepare shopping list
+    1. Check inventory
+    2. Review recipes
+    3. Note special items
+
+- Go to store
+    1. Get shopping cart
+    2. Follow list by aisle
+    3. Check produce quality
+
+- Checkout process
+    1. Unload items
+    2. Apply coupons
+    3. Pay and bag
+
+## Deep Nesting (3 Levels)
+
+Project organization structure:
+
+1. Backend Development
+    - API Layer
+        - REST endpoints
+        - GraphQL resolvers
+        - Authentication middleware
+    - Database
+        - Schema design
+        - Migrations
+        - Indexing strategy
+
+2. Frontend Development
+    - Components
+        - Shared UI elements
+        - Page layouts
+        - Form controls
+    - State Management
+        - Redux store
+        - Actions and reducers
+        - Selectors
+
+3. DevOps
+    - CI/CD Pipeline
+        - Build automation
+        - Test runners
+        - Deployment scripts
+    - Infrastructure
+        - Container orchestration
+        - Load balancing
+        - Monitoring setup
+
+## Mixed Formatting in Nested Lists
+
+Feature checklist with rich text:
+
+- **Authentication System**
+    1. User registration with `email` validation
+    2. Login with [OAuth 2.0](https://oauth.net/2/)
+    3. _Password reset_ flow
+    4. ~Session management~ (using JWT instead)
+
+- **User Profile**
+    1. Edit profile with `avatar` upload
+    2. Privacy settings for _public_ vs **private** data
+    3. Link to [external profiles](https://example.com)
+
+> **Note**: All nested items now appear directly under their parent items!
+"""
+
+    print("\n📝 Nested Lists Example: Demonstrating Proper Nesting")
+    print("=" * 50)
+    print(f"Input markdown:\n{sample_markdown}")
+
+    # Convert markdown to blocks
+    blocks = markdown_to_blocks(sample_markdown)
+
+    print(f"\n🎉 Generated {len(blocks)} blocks:")
+    for i, block in enumerate(blocks):
+        print(f"  {i+1}. {block['type']}")
+        if "text" in block:
+            text_preview = block["text"]["text"][:50]
+            print(
+                f"     Preview: {text_preview}{'...' if len(text_preview) >= 50 else ''}",
+            )
+        elif block["type"] == "rich_text" and "elements" in block:
+            # Show structure of rich text elements
+            elements = block["elements"]
+            print(f"     Contains {len(elements)} element(s):")
+            for j, elem in enumerate(elements):
+                elem_type = elem.get("type", "unknown")
+                if elem_type == "rich_text_list":
+                    style = elem.get("style", "bullet")
+                    indent = elem.get("indent", 0)
+                    item_count = len(elem.get("elements", []))
+                    print(
+                        f"       [{j}] {style} list, indent={indent}, items={item_count}"
+                    )
+                else:
+                    print(f"       [{j}] {elem_type}")
+
+    return blocks
+
+
 # Example usage
 if __name__ == "__main__":
-    # Demonstrate both usage patterns
+    # Demonstrate all usage patterns
     advanced_blocks = advanced_usage_example()
     simple_blocks = simple_usage_example()
+    nested_blocks = nested_lists_example()
 
     # Save for testing in Block Kit Builder
     output = {
         "advanced_example": {"blocks": advanced_blocks},
         "simple_example": {"blocks": simple_blocks},
+        "nested_lists_example": {"blocks": nested_blocks},
     }
 
     with open("examples/example_output.json", "w") as f:
@@ -221,3 +350,4 @@ if __name__ == "__main__":
     print(
         "🔗 Test in Slack's Block Kit Builder: https://app.slack.com/block-kit-builder",
     )
+    print("\n📋 Copy the 'nested_lists_example' section to test the bug fix!")

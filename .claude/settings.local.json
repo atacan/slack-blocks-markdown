@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python test:*)",
+      "Bash(python:*)",
+      "WebFetch(domain:docs.slack.dev)",
+      "WebSearch",
+      "WebFetch(domain:pypi.org)",
+      "WebFetch(domain:github.com)",
+      "Bash(mkdir:*)",
+      "Bash(uv pip install:*)",
+      "Bash(ruff check:*)",
+      "Bash(chmod:*)",
+      "WebFetch(domain:test.pypi.org)",
+      "Bash(pre-commit run:*)",
+      "Bash(mypy:*)",
+      "Bash(source .venv/bin/activate)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git tag:*)",
+      "Bash(git log:*)",
+      "Bash(git push:*)",
+      "Bash(git fetch:*)",
+      "Bash(python3 -m pytest:*)",
+      "Bash(uv run pytest:*)",
+      "Bash(uv lock:*)",
+      "Bash(uv run:*)",
+      "Bash(curl:*)",
+      "Bash(python3:*)",
+      "Bash(find:*)",
+      "WebFetch(domain:api.slack.com)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

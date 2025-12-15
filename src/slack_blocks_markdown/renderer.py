@@ -378,19 +378,47 @@ class SlackBlocksRenderer(BaseRenderer):
 
         return ""
 
-    def render_list(  # noqa: C901
-        self,
-        token: block_token.List,
-        indent: int = 0,
-    ) -> str:
+    def render_list(self, token: block_token.List) -> str:
         """
         Render list as RichTextBlock with native list formatting.
 
         Supports nested lists by recursively handling List tokens within ListItems.
+        This method should only be called for top-level lists - it creates a single
+        RichTextBlock containing all nested list elements.
 
         Args:
             token: The List token to render
-            indent: The indentation level for nested lists (0 for top-level)
+        """
+        # Build all list elements recursively (including nested lists)
+        all_elements = self._build_list_elements(token, indent=0)
+
+        # Create a single RichTextBlock with all elements
+        if all_elements:
+            rich_text_block = RichTextBlock(elements=all_elements)
+            self.blocks.append(rich_text_block)
+
+        return ""
+
+    def _build_list_elements(  # noqa: C901
+        self,
+        token: block_token.List,
+        indent: int,
+    ) -> list[dict[str, Any]]:
+        """
+        Recursively build list elements for a list and its nested children.
+
+        This method returns a list of rich_text_list dictionaries that should be
+        placed in sequence within a single RichTextBlock. When a list item has
+        nested lists, the parent list is "split" - items before the nested list
+        go in one rich_text_list, the nested list gets its own rich_text_list(s),
+        and items after continue in another rich_text_list.
+
+        Args:
+            token: The List token to process
+            indent: The indentation level (0 for top-level, 1+ for nested)
+
+        Returns:
+            List of rich_text_list element dictionaries
         """
         # Determine list style
         is_ordered = hasattr(token, "start") and token.start is not None
@@ -404,79 +432,89 @@ class SlackBlocksRenderer(BaseRenderer):
                 # offset in Slack is 0-based, so offset=1 means start at 2
                 offset = start_num - 1
 
-        # Collect list item sections and nested lists
-        list_elements: list[dict[str, Any]] = []
-        nested_lists: list[tuple[int, block_token.List, int]] = (
-            []
-        )  # (position, list_token, indent)
+        # Process all list items and collect elements
+        all_list_elements: list[dict[str, Any]] = []
+        current_batch: list[dict[str, Any]] = []
 
         if token.children:
             for child in token.children:
                 list_item = cast(block_token.ListItem, child)
-                # Process the list item and check for nested lists
-                section_elements, _has_nested = self._render_list_item_to_rich_text(
-                    list_item,
+
+                # Extract the item's text content (excluding nested lists)
+                section_elements, nested_list_tokens = (
+                    self._render_list_item_to_rich_text(list_item)
                 )
 
                 if section_elements:
-                    list_elements.append(
+                    current_batch.append(
                         {
                             "type": "rich_text_section",
                             "elements": section_elements,
-                        },
+                        }
                     )
 
-                # Check for nested lists in the list item's children
-                if list_item.children:
-                    for child_token in list_item.children:
-                        if isinstance(child_token, block_token.List):
-                            # Store position where nested list should appear
-                            nested_lists.append(
-                                (len(list_elements), child_token, indent + 1),
-                            )
+                # If this item has nested lists, we need to:
+                # 1. Close the current batch (create a rich_text_list)
+                # 2. Process the nested lists
+                # 3. Start a new batch for subsequent items
+                if nested_list_tokens:
+                    # Close current batch if it has items
+                    if current_batch:
+                        list_element_dict: dict[str, Any] = {
+                            "type": "rich_text_list",
+                            "style": style,
+                            "elements": current_batch,
+                        }
+                        if indent > 0:
+                            list_element_dict["indent"] = indent
+                        if offset is not None:
+                            list_element_dict["offset"] = offset
 
-        # Create the main list element
-        if list_elements:
-            list_element_dict: dict[str, Any] = {
+                        all_list_elements.append(list_element_dict)
+                        current_batch = []
+
+                    # Process nested lists recursively
+                    for nested_list_token in nested_list_tokens:
+                        nested_elements = self._build_list_elements(
+                            nested_list_token, indent + 1
+                        )
+                        all_list_elements.extend(nested_elements)
+
+        # Add any remaining items in the current batch
+        if current_batch:
+            list_element_dict = {
                 "type": "rich_text_list",
                 "style": style,
-                "elements": list_elements,
+                "elements": current_batch,
             }
             if indent > 0:
-                # Use indent level directly (0-8 allowed by Slack)
                 list_element_dict["indent"] = indent
             if offset is not None:
                 list_element_dict["offset"] = offset
 
-            # Create RichTextBlock with this list
-            rich_text_block = RichTextBlock(elements=[list_element_dict])
-            self.blocks.append(rich_text_block)
+            all_list_elements.append(list_element_dict)
 
-            # Process any nested lists
-            for _, nested_list_token, nested_indent in nested_lists:
-                self.render_list(nested_list_token, indent=nested_indent)
-
-        return ""
+        return all_list_elements
 
     def _render_list_item_to_rich_text(
         self,
         token: block_token.ListItem,
-    ) -> tuple[list[dict[str, Any]], bool]:
+    ) -> tuple[list[dict[str, Any]], list[block_token.List]]:
         """
         Render a list item to rich text elements.
 
         Returns:
-            Tuple of (list of rich text element dicts, whether nested lists were found)
+            Tuple of (list of rich text element dicts, list of nested List tokens)
         """
         elements: list[dict[str, Any]] = []
-        has_nested_list = False
+        nested_lists: list[block_token.List] = []
 
         if token.children:
             for child in token.children:
                 # Check if this is a nested list
                 if isinstance(child, block_token.List):
-                    has_nested_list = True
-                    # Nested lists are handled separately by render_list
+                    nested_lists.append(child)
+                    # Nested lists are handled separately by _build_list_elements
                     continue
 
                 # Handle paragraphs and other inline content
@@ -490,7 +528,7 @@ class SlackBlocksRenderer(BaseRenderer):
                     parts = self._render_to_rich_text_parts(child)
                     elements.extend(parts)
 
-        return elements, has_nested_list
+        return elements, nested_lists
 
     def render_list_item(self, token: block_token.ListItem) -> str:
         """
