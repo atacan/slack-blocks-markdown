@@ -1,10 +1,10 @@
 # Slack Blocks Markdown
 
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/atacan/slack-blocks-markdown)
 [![PyPI version](https://badge.fury.io/py/slack-blocks-markdown.svg)](https://badge.fury.io/py/slack-blocks-markdown)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Tests](https://github.com/atacan/slack-blocks-markdown/workflows/tests/badge.svg)](https://github.com/atacan/slack-blocks-markdown/actions)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/atacan/slack-blocks-markdown)
 
 Convert Markdown to Slack Block Kit blocks using Python. This library provides a clean, efficient way to transform your Markdown content into Slack's interactive Block Kit format.
 
